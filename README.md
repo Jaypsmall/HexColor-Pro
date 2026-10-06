@@ -1,4 +1,4 @@
-# hexcolorpro
+# 🎨 HexColorPro
 
 A new Flutter project.
 
