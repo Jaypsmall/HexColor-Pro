@@ -1,0 +1,12 @@
+[package]
+name = "hexcolor_engine"
+version = "1.0.0"
+edition = "2021"
+authors = ["JAYLIZ"]
+description = "High-performance Rust color engine for HexColor PRO"
+
+[lib]
+name = "hexcolor_engine"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
