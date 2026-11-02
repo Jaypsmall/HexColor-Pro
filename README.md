@@ -1,18 +1,22 @@
-# 🎨 HexColor PRO v1.1.0
+# 🎨 HexColor PRO v1.0.1  ![Kotlin](https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE) ![Flutter](https://img.shields.io/badge/Flutter-181717?style=flat&logo=flutter&logoColor=70B9EC) ![Rust](https://img.shields.io/badge/Rust-181717?style=flat&logo=rust&logoColor=FF6000)
 
-![Kotlin](https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE)
-![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)
-![Rust](https://img.shields.io/badge/Rust-Native_Engine-000000?logo=rust)
+![Kotlin](https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE) ![Flutter](https://img.shields.io/badge/Flutter-181717?style=flat&logo=flutter&logoColor=70B9EC) ![Rust](https://img.shields.io/badge/Rust-181717?style=flat&logo=rust&logoColor=FF6000)
 ![License](https://img.shields.io/badge/License-PRO-gold)
 ![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20Linux-brightgreen)
 
 **HexColor PRO** es una aplicación avanzada e interactiva de diseño y cálculo de espacios de color impulsada por un motor de alto rendimiento escrito en **Rust** e integrada en **Flutter**. Diseñada para desarrolladores, diseñadores gráficos y profesionales del color.
 
+<p align="center">
+  <a href="https://kotlinlang.org" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="30" alt="Kotlin" /></a> &nbsp;&nbsp;
+  <a href="https://flutter.dev" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" height="30" alt="Flutter" /></a> &nbsp;&nbsp;
+  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a>
+</p>
+
 ---
 
 ## ✨ Características Principales
 
-### ⚡ 1. Motor Nativo en Rust (`rust_engine`)
+###  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a> 1. Motor Nativo en Rust (`rust_engine`)  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a>
 - **Aceleración C-ABI (FFI)**: Algoritmos de conversión matemática de color escritos en Rust para máximo rendimiento.
 - **Espacios de Color**: Conversiones entre Hexadecimal (`#RRGGBB`), RGB, HSL, HSV y CMYK.
 - **Simulación de Daltonismo**: Algoritmos de transformación espectral para Protanopia, Deuteranopia y Tritanopia.
