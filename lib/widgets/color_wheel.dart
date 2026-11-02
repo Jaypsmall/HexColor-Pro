@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../color_manager.dart';
 import '../theme/gold_theme.dart';
 
-enum HarmonyMode { complementary, triadic, analogous }
+enum HarmonyMode { complementary, triadic, analogous, tetradic, splitComplementary, monochromatic, shades }
 
 class ColorWheelWidget extends StatelessWidget {
   final Color currentColor;
@@ -12,8 +12,11 @@ class ColorWheelWidget extends StatelessWidget {
   final int analogousCount;
   final ValueChanged<Color> onColorChanged;
   final ValueChanged<Color>? onColorTapped;
+  final VoidCallback? onMoonTapped;
+  final bool isShadowMode;
   final String colorBlindnessMode;
   final bool isGoldMode;
+  final bool isDarkMode;
   final Color uiAccentColor;
 
   const ColorWheelWidget({
@@ -24,8 +27,11 @@ class ColorWheelWidget extends StatelessWidget {
     this.analogousCount = 7,
     required this.onColorChanged,
     this.onColorTapped,
+    this.onMoonTapped,
+    this.isShadowMode = false,
     this.colorBlindnessMode = 'None',
     this.isGoldMode = true,
+    this.isDarkMode = true,
     this.uiAccentColor = GoldTheme.goldMid,
   });
 
@@ -40,6 +46,13 @@ class ColorWheelWidget extends StatelessWidget {
         const double endAngle = 90.0;
         final double step = analogousCount > 1 ? (endAngle - startAngle) / (analogousCount - 1) : 0.0;
         return List.generate(analogousCount, (i) => startAngle + (i * step));
+      case HarmonyMode.tetradic:
+        return [0.0, 90.0, 180.0, 270.0];
+      case HarmonyMode.splitComplementary:
+        return [0.0, 150.0, 210.0];
+      case HarmonyMode.monochromatic:
+      case HarmonyMode.shades:
+        return [0.0];
     }
   }
 
@@ -50,6 +63,11 @@ class ColorWheelWidget extends StatelessWidget {
     final radius = min(size.width, size.height) / 2;
 
     if (radius <= 0) return;
+
+    // Avoid hijacking taps close to the center moon (radius * 0.28)
+    if (dist < radius * 0.26) {
+      return;
+    }
 
     double hue = (atan2(pos.dy, pos.dx) * (180.0 / pi) + 360.0) % 360.0;
     double saturation = (dist / radius).clamp(0.0, 1.0);
@@ -66,6 +84,7 @@ class ColorWheelWidget extends StatelessWidget {
       builder: (context, constraints) {
         final size = Size(constraints.maxWidth, constraints.maxHeight);
         final minDim = min(size.width, size.height);
+        final moonSize = minDim * 0.32;
 
         return GestureDetector(
           onPanStart: (details) => _handleTouch(details.localPosition, size),
@@ -85,13 +104,38 @@ class ColorWheelWidget extends StatelessWidget {
                   uiAccentColor: uiAccentColor,
                 ),
               ),
-              // Moon Icon in the center
-              Icon(
-                hsv.value > 0.5 ? Icons.nightlight_round : Icons.brightness_3_outlined,
-                size: minDim * 0.28,
-                color: isGoldMode
-                    ? GoldTheme.goldLight.withOpacity(0.85)
-                    : uiAccentColor.withOpacity(0.85),
+              // Moon Image in the center (taps toggle shadow mode)
+              GestureDetector(
+                onTap: onMoonTapped,
+                child: Container(
+                  width: moonSize,
+                  height: moonSize,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black45,
+                        blurRadius: 10,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: Image.asset(
+                      isShadowMode ? 'assets/moon_shadow.PNG' : 'assets/moon_light.png',
+                      width: moonSize,
+                      height: moonSize,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          isShadowMode ? Icons.nightlight_round : Icons.brightness_7_outlined,
+                          size: moonSize * 0.7,
+                          color: GoldTheme.goldLight,
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -137,7 +181,7 @@ class _WheelPainter extends CustomPainter {
       Colors.red,
     ].map((c) => ColorManager.simulateColorBlindness(c, colorBlindnessMode)).toList();
 
-    // 1. Draw 3 Saturation Rings
+    // 1. Draw Saturation Rings
     for (int i = 0; i < 3; i++) {
       final r = radius - (i * (ringThickness + gap)) - (ringThickness / 2);
       final ringSat = i == 0 ? 1.0 : (i == 1 ? 0.7 : 0.4);
@@ -198,14 +242,12 @@ class _WheelPainter extends CustomPainter {
 
       canvas.drawCircle(labelPos, 12.0, dotPaint);
 
-      // Border for target dot
       final borderPaint = Paint()
         ..color = GoldTheme.goldBorderColor
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5;
       canvas.drawCircle(labelPos, 12.0, borderPaint);
 
-      // Draw number index
       final textPainter = TextPainter(
         text: TextSpan(
           text: '${i + 1}',

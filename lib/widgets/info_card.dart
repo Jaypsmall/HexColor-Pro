@@ -9,6 +9,7 @@ class InfoCardWidget extends StatelessWidget {
   final ValueChanged<Color> onCopyColor;
   final String colorBlindnessMode;
   final bool isGoldMode;
+  final bool isDarkMode;
 
   const InfoCardWidget({
     super.key,
@@ -17,6 +18,7 @@ class InfoCardWidget extends StatelessWidget {
     required this.onCopyColor,
     this.colorBlindnessMode = 'None',
     this.isGoldMode = true,
+    this.isDarkMode = true,
   });
 
   @override
@@ -28,19 +30,26 @@ class InfoCardWidget extends StatelessWidget {
     final bestTextColor = contrastWhite > contrastBlack ? "Blanco" : "Negro";
 
     final hexStr = ColorManager.colorToHex(currentColor);
+    final rgbStr = ColorManager.colorToRgbString(currentColor);
+    final hslStr = ColorManager.colorToHslString(currentColor);
+    final cmykStr = ColorManager.colorToCmykString(currentColor);
+
+    final cardBg = GoldTheme.cardColor(isDarkMode);
+    final txtColor = GoldTheme.textColor(isDarkMode);
+    final inputBg = GoldTheme.cardInputColor(isDarkMode);
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: GoldTheme.darkCard.withOpacity(0.95),
+        color: cardBg.withOpacity(0.95),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: GoldTheme.goldMid, width: 1.2),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black54,
+            color: isDarkMode ? Colors.black54 : Colors.black12,
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -49,16 +58,16 @@ class InfoCardWidget extends StatelessWidget {
         children: [
           // Hex Badge Title
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.black45,
-              borderRadius: BorderRadius.circular(6),
+              color: inputBg,
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(color: GoldTheme.goldMid.withOpacity(0.5)),
             ),
             child: Text(
               hexStr,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: txtColor,
                 fontSize: 20,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.2,
@@ -67,6 +76,23 @@ class InfoCardWidget extends StatelessWidget {
           ),
 
           const SizedBox(height: 8),
+
+          // Format Values Row (RGB, HSL, CMYK)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _FormatChip(label: rgbStr, isDarkMode: isDarkMode),
+                const SizedBox(width: 6),
+                _FormatChip(label: hslStr, isDarkMode: isDarkMode),
+                const SizedBox(width: 6),
+                _FormatChip(label: cmykStr, isDarkMode: isDarkMode),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 10),
 
           // WCAG Contrast Badge
           Row(
@@ -90,7 +116,10 @@ class InfoCardWidget extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 "Ratio: ${maxContrast.toStringAsFixed(1)}:1 ($bestTextColor)",
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                style: TextStyle(
+                  color: GoldTheme.subtextColor(isDarkMode),
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
@@ -136,8 +165,8 @@ class InfoCardWidget extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           ColorManager.colorToHex(color).replaceAll('#', ''),
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: GoldTheme.subtextColor(isDarkMode),
                             fontSize: 9,
                             fontWeight: FontWeight.w600,
                           ),
@@ -150,6 +179,33 @@ class InfoCardWidget extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _FormatChip extends StatelessWidget {
+  final String label;
+  final bool isDarkMode;
+
+  const _FormatChip({required this.label, required this.isDarkMode});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: isDarkMode ? Colors.black38 : Colors.black.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: GoldTheme.goldMid.withOpacity(0.3)),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: GoldTheme.textColor(isDarkMode),
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

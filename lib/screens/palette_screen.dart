@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../color_manager.dart';
+import '../favorites_manager.dart';
 import '../theme/gold_theme.dart';
 
 class PaletteScreen extends StatefulWidget {
@@ -9,10 +10,11 @@ class PaletteScreen extends StatefulWidget {
   final HSVColor hsv;
   final ValueChanged<Color> onColorChanged;
   final ValueChanged<Color> onCopyColor;
-  final ValueChanged<Color> onSaveFavorite;
+  final ValueChanged<Color> onToggleFavorite;
   final VoidCallback onToggleSniper;
   final String colorBlindnessMode;
   final bool isGoldMode;
+  final bool isDarkMode;
 
   const PaletteScreen({
     super.key,
@@ -20,18 +22,23 @@ class PaletteScreen extends StatefulWidget {
     required this.hsv,
     required this.onColorChanged,
     required this.onCopyColor,
-    required this.onSaveFavorite,
+    required this.onToggleFavorite,
     required this.onToggleSniper,
     this.colorBlindnessMode = 'None',
     this.isGoldMode = true,
+    this.isDarkMode = true,
   });
 
   @override
   State<PaletteScreen> createState() => _PaletteScreenState();
 }
 
+enum PaletteMode { standard, tetradic, monochromatic, shadesTints }
+
 class _PaletteScreenState extends State<PaletteScreen> {
   late TextEditingController _hexController;
+  PaletteMode _mode = PaletteMode.standard;
+  final FavoritesManager _favManager = FavoritesManager();
 
   @override
   void initState() {
@@ -39,6 +46,7 @@ class _PaletteScreenState extends State<PaletteScreen> {
     _hexController = TextEditingController(
       text: ColorManager.colorToHex(widget.currentColor),
     );
+    _favManager.addListener(_onFavsChanged);
   }
 
   @override
@@ -51,8 +59,13 @@ class _PaletteScreenState extends State<PaletteScreen> {
 
   @override
   void dispose() {
+    _favManager.removeListener(_onFavsChanged);
     _hexController.dispose();
     super.dispose();
+  }
+
+  void _onFavsChanged() {
+    if (mounted) setState(() {});
   }
 
   void _applyHexInput() {
@@ -80,26 +93,56 @@ class _PaletteScreenState extends State<PaletteScreen> {
     widget.onColorChanged(newColor);
   }
 
+  List<_ColorCardItem> _buildColorItems() {
+    final color = widget.currentColor;
+    final comp = ColorManager.getComplementary(color);
+    final analogous = ColorManager.getAnalogous(color, count: 7);
+    final triadic = ColorManager.getTriadic(color);
+
+    switch (_mode) {
+      case PaletteMode.standard:
+        return [
+          _ColorCardItem("① Original", color),
+          _ColorCardItem("② Complementario", comp),
+          _ColorCardItem("③ Análogo L", analogous.length > 2 ? analogous[2] : analogous.first),
+          _ColorCardItem("④ Análogo R", analogous.length > 4 ? analogous[4] : analogous.last),
+          _ColorCardItem("⑤ Triádico 1", triadic[1]),
+          _ColorCardItem("⑥ Triádico 2", triadic[2]),
+        ];
+      case PaletteMode.tetradic:
+        final tetradic = ColorManager.getTetradic(color);
+        return [
+          _ColorCardItem("① Base", tetradic[0]),
+          _ColorCardItem("② Tetrádico +90°", tetradic[1]),
+          _ColorCardItem("③ Tetrádico +180°", tetradic[2]),
+          _ColorCardItem("④ Tetrádico +270°", tetradic[3]),
+        ];
+      case PaletteMode.monochromatic:
+        final mono = ColorManager.getMonochromatic(color, count: 6);
+        return List.generate(
+          mono.length,
+          (i) => _ColorCardItem("Tono ${i + 1}", mono[i]),
+        );
+      case PaletteMode.shadesTints:
+        final shades = ColorManager.getShadesAndTints(color, count: 6);
+        return List.generate(
+          shades.length,
+          (i) => _ColorCardItem("Matiz ${i + 1}", shades[i]),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final comp = ColorManager.getComplementary(widget.currentColor);
-    final analogous = ColorManager.getAnalogous(widget.currentColor, count: 7);
-    final triadic = ColorManager.getTriadic(widget.currentColor);
-
-    final colorItems = [
-      _ColorCardItem("① Original", widget.currentColor),
-      _ColorCardItem("② Complementario", comp),
-      _ColorCardItem("③ Análogo L", analogous.length > 2 ? analogous[2] : analogous.first),
-      _ColorCardItem("④ Análogo R", analogous.length > 4 ? analogous[4] : analogous.last),
-      _ColorCardItem("⑤ Triádico 1", triadic[1]),
-      _ColorCardItem("⑥ Triádico 2", triadic[2]),
-    ];
+    final colorItems = _buildColorItems();
+    final txtColor = GoldTheme.textColor(widget.isDarkMode);
+    final inputBg = GoldTheme.cardInputColor(widget.isDarkMode);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Column(
         children: [
-          // Hex Input Row with Show & Camera Sniper buttons
+          // Hex Input Row & Sniper Button
           Row(
             children: [
               Expanded(
@@ -107,8 +150,8 @@ class _PaletteScreenState extends State<PaletteScreen> {
                   height: 48,
                   child: TextField(
                     controller: _hexController,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: txtColor,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -116,7 +159,7 @@ class _PaletteScreenState extends State<PaletteScreen> {
                       hintText: "#RRGGBB",
                       hintStyle: const TextStyle(color: Colors.grey),
                       filled: true,
-                      fillColor: Colors.black,
+                      fillColor: inputBg,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -132,13 +175,15 @@ class _PaletteScreenState extends State<PaletteScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              // Apply Hex Button
               GestureDetector(
                 onTap: _applyHexInput,
                 child: Container(
                   height: 48,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: GoldTheme.goldBoxDecoration(borderRadius: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
+                  decoration: GoldTheme.goldBoxDecoration(
+                    borderRadius: 12,
+                    isDarkMode: widget.isDarkMode,
+                  ),
                   alignment: Alignment.center,
                   child: const Text(
                     "MOSTRAR",
@@ -151,13 +196,15 @@ class _PaletteScreenState extends State<PaletteScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              // Camera Sniper Trigger Button
               GestureDetector(
                 onTap: widget.onToggleSniper,
                 child: Container(
                   width: 48,
                   height: 48,
-                  decoration: GoldTheme.goldBoxDecoration(borderRadius: 12),
+                  decoration: GoldTheme.goldBoxDecoration(
+                    borderRadius: 12,
+                    isDarkMode: widget.isDarkMode,
+                  ),
                   alignment: Alignment.center,
                   child: const Icon(
                     Icons.camera_alt,
@@ -167,6 +214,44 @@ class _PaletteScreenState extends State<PaletteScreen> {
                 ),
               ),
             ],
+          ),
+
+          const SizedBox(height: 14),
+
+          // Palette Mode Filter Selector
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _ModeChip(
+                  label: "ESTÁNDAR",
+                  isSelected: _mode == PaletteMode.standard,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() => _mode = PaletteMode.standard),
+                ),
+                const SizedBox(width: 6),
+                _ModeChip(
+                  label: "TETRÁDICO",
+                  isSelected: _mode == PaletteMode.tetradic,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() => _mode = PaletteMode.tetradic),
+                ),
+                const SizedBox(width: 6),
+                _ModeChip(
+                  label: "MONOCROMÁTICO",
+                  isSelected: _mode == PaletteMode.monochromatic,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() => _mode = PaletteMode.monochromatic),
+                ),
+                const SizedBox(width: 6),
+                _ModeChip(
+                  label: "SOMBRAS / MATICES",
+                  isSelected: _mode == PaletteMode.shadesTints,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() => _mode = PaletteMode.shadesTints),
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 14),
@@ -224,15 +309,19 @@ class _PaletteScreenState extends State<PaletteScreen> {
                   onClick: _generateRandomColor,
                   height: 44,
                   icon: Icons.shuffle,
+                  isDarkMode: widget.isDarkMode,
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
                 child: GoldButton(
                   text: "COMPLEMENTARIO",
-                  onClick: () => widget.onColorChanged(comp),
+                  onClick: () => widget.onColorChanged(
+                    ColorManager.getComplementary(widget.currentColor),
+                  ),
                   height: 44,
                   icon: Icons.invert_colors,
+                  isDarkMode: widget.isDarkMode,
                 ),
               ),
             ],
@@ -258,22 +347,22 @@ class _PaletteScreenState extends State<PaletteScreen> {
                 widget.colorBlindnessMode,
               );
               final isDark = ColorManager.isDark(displayColor);
-              final textColor = isDark ? Colors.white : Colors.black;
+              final cardTextColor = isDark ? Colors.white : Colors.black;
+              final isFav = _favManager.isFavorite(item.color);
 
               return GestureDetector(
                 onTap: () => widget.onCopyColor(item.color),
-                onLongPress: () => widget.onSaveFavorite(item.color),
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: displayColor,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: GoldTheme.goldMid, width: 1.2),
-                    boxShadow: const [
+                    boxShadow: [
                       BoxShadow(
-                        color: Colors.black38,
+                        color: widget.isDarkMode ? Colors.black38 : Colors.black12,
                         blurRadius: 6,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       ),
                     ],
                   ),
@@ -288,14 +377,21 @@ class _PaletteScreenState extends State<PaletteScreen> {
                             child: Text(
                               item.title,
                               style: TextStyle(
-                                color: textColor,
+                                color: cardTextColor,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w900,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Icon(Icons.star_border, color: textColor, size: 18),
+                          GestureDetector(
+                            onTap: () => widget.onToggleFavorite(item.color),
+                            child: Icon(
+                              isFav ? Icons.star : Icons.star_border,
+                              color: isFav ? GoldTheme.goldLight : cardTextColor,
+                              size: 20,
+                            ),
+                          ),
                         ],
                       ),
                       Column(
@@ -304,15 +400,15 @@ class _PaletteScreenState extends State<PaletteScreen> {
                           Text(
                             ColorManager.colorToHex(item.color),
                             style: TextStyle(
-                              color: textColor,
+                              color: cardTextColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                           Text(
-                            "RGB: (${(item.color.red * 255).round()}, ${(item.color.green * 255).round()}, ${(item.color.blue * 255).round()})",
+                            ColorManager.colorToRgbString(item.color),
                             style: TextStyle(
-                              color: textColor.withOpacity(0.8),
+                              color: cardTextColor.withOpacity(0.85),
                               fontSize: 10,
                             ),
                           ),
@@ -335,4 +431,48 @@ class _ColorCardItem {
   final Color color;
 
   _ColorCardItem(this.title, this.color);
+}
+
+class _ModeChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final bool isDarkMode;
+  final VoidCallback onTap;
+
+  const _ModeChip({
+    required this.label,
+    required this.isSelected,
+    required this.isDarkMode,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: isSelected
+            ? GoldTheme.goldBoxDecoration(
+                borderRadius: 10,
+                isDarkMode: isDarkMode,
+              )
+            : BoxDecoration(
+                color: isDarkMode ? Colors.black38 : Colors.black.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: isDarkMode ? Colors.white12 : Colors.black12,
+                ),
+              ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? GoldTheme.goldText : (isDarkMode ? Colors.grey : Colors.black54),
+            fontSize: 10,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+      ),
+    );
+  }
 }

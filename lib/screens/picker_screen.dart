@@ -4,21 +4,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 import '../color_manager.dart';
+import '../favorites_manager.dart';
 import '../theme/gold_theme.dart';
 import '../widgets/export_dialog.dart';
 
 class PickerScreen extends StatefulWidget {
   final ValueChanged<Color> onColorSelected;
-  final ValueChanged<Color> onSaveFavorite;
+  final ValueChanged<Color> onToggleFavorite;
   final ValueChanged<Color> onCopyColor;
   final String colorBlindnessMode;
+  final bool isDarkMode;
 
   const PickerScreen({
     super.key,
     required this.onColorSelected,
-    required this.onSaveFavorite,
+    required this.onToggleFavorite,
     required this.onCopyColor,
     this.colorBlindnessMode = 'None',
+    this.isDarkMode = true,
   });
 
   @override
@@ -32,6 +35,23 @@ class _PickerScreenState extends State<PickerScreen> {
   double _extractCount = 12.0;
 
   final ImagePicker _picker = ImagePicker();
+  final FavoritesManager _favManager = FavoritesManager();
+
+  @override
+  void initState() {
+    super.initState();
+    _favManager.addListener(_onFavsChanged);
+  }
+
+  @override
+  void dispose() {
+    _favManager.removeListener(_onFavsChanged);
+    super.dispose();
+  }
+
+  void _onFavsChanged() {
+    if (mounted) setState(() {});
+  }
 
   Future<void> _pickImage() async {
     try {
@@ -83,12 +103,18 @@ class _PickerScreenState extends State<PickerScreen> {
     if (_extractedColors.isEmpty) return;
     showDialog(
       context: context,
-      builder: (context) => ExportDialogWidget(colors: _extractedColors),
+      builder: (context) => ExportDialogWidget(
+        colors: _extractedColors,
+        isDarkMode: widget.isDarkMode,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final txtColor = GoldTheme.textColor(widget.isDarkMode);
+    final cardBg = GoldTheme.cardColor(widget.isDarkMode);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Column(
@@ -98,7 +124,7 @@ class _PickerScreenState extends State<PickerScreen> {
             height: 260,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.black45,
+              color: cardBg,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: GoldTheme.goldMid, width: 1.2),
             ),
@@ -115,10 +141,10 @@ class _PickerScreenState extends State<PickerScreen> {
                   )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.add_photo_alternate_outlined, color: Colors.grey, size: 56),
-                      SizedBox(height: 8),
-                      Text("Sin imagen seleccionada", style: TextStyle(color: Colors.grey)),
+                    children: [
+                      const Icon(Icons.add_photo_alternate_outlined, color: Colors.grey, size: 56),
+                      const SizedBox(height: 8),
+                      Text("Sin imagen seleccionada", style: TextStyle(color: txtColor.withOpacity(0.6))),
                     ],
                   ),
           ),
@@ -131,7 +157,11 @@ class _PickerScreenState extends State<PickerScreen> {
             children: [
               Text(
                 "Colores a extraer: ${_extractCount.toInt()}",
-                style: const TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: GoldTheme.subtextColor(widget.isDarkMode),
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               Slider(
                 value: _extractCount,
@@ -139,7 +169,7 @@ class _PickerScreenState extends State<PickerScreen> {
                 max: 32.0,
                 divisions: 28,
                 activeColor: GoldTheme.goldMid,
-                inactiveColor: Colors.white24,
+                inactiveColor: widget.isDarkMode ? Colors.white24 : Colors.black12,
                 onChanged: (val) {
                   setState(() => _extractCount = val);
                 },
@@ -158,6 +188,7 @@ class _PickerScreenState extends State<PickerScreen> {
                   onClick: _pickImage,
                   height: 46,
                   icon: Icons.image,
+                  isDarkMode: widget.isDarkMode,
                 ),
               ),
               if (_imageFile != null) ...[
@@ -168,6 +199,7 @@ class _PickerScreenState extends State<PickerScreen> {
                     onClick: _isLoading ? () {} : _extractColors,
                     height: 46,
                     icon: Icons.colorize,
+                    isDarkMode: widget.isDarkMode,
                   ),
                 ),
               ],
@@ -181,10 +213,10 @@ class _PickerScreenState extends State<PickerScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "COLORES DETECTADOS",
                   style: TextStyle(
-                    color: GoldTheme.goldLight,
+                    color: GoldTheme.accentTitleColor(widget.isDarkMode),
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.1,
@@ -192,9 +224,9 @@ class _PickerScreenState extends State<PickerScreen> {
                 ),
                 IconButton(
                   onPressed: _showExportDialog,
-                  icon: const Icon(Icons.share, color: GoldTheme.goldLight),
+                  icon: Icon(Icons.share, color: GoldTheme.accentTitleColor(widget.isDarkMode)),
                   style: IconButton.styleFrom(
-                    backgroundColor: Colors.black45,
+                    backgroundColor: widget.isDarkMode ? Colors.black45 : Colors.black12,
                     side: const BorderSide(color: GoldTheme.goldMid, width: 1),
                   ),
                 ),
@@ -219,21 +251,21 @@ class _PickerScreenState extends State<PickerScreen> {
                 );
                 final isDark = ColorManager.isDark(displayColor);
                 final textColor = isDark ? Colors.white : Colors.black;
+                final isFav = _favManager.isFavorite(color);
 
                 return GestureDetector(
                   onTap: () => widget.onColorSelected(color),
-                  onLongPress: () => widget.onSaveFavorite(color),
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: displayColor,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: GoldTheme.goldMid, width: 1.2),
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
-                          color: Colors.black38,
+                          color: widget.isDarkMode ? Colors.black38 : Colors.black12,
                           blurRadius: 6,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -241,21 +273,46 @@ class _PickerScreenState extends State<PickerScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Extraído #${index + 1}",
-                          style: TextStyle(
-                            color: textColor,
-                            fontSize: 11,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Extraído #${index + 1}",
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () => widget.onToggleFavorite(color),
+                              child: Icon(
+                                isFav ? Icons.star : Icons.star_border,
+                                color: isFav ? GoldTheme.goldLight : textColor,
+                                size: 18,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          ColorManager.colorToHex(color),
-                          style: TextStyle(
-                            color: textColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              ColorManager.colorToHex(color),
+                              style: TextStyle(
+                                color: textColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            Text(
+                              ColorManager.colorToRgbString(color),
+                              style: TextStyle(
+                                color: textColor.withOpacity(0.85),
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

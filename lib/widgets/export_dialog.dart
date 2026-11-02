@@ -6,10 +6,12 @@ import '../theme/gold_theme.dart';
 
 class ExportDialogWidget extends StatelessWidget {
   final List<Color> colors;
+  final bool isDarkMode;
 
   const ExportDialogWidget({
     super.key,
     required this.colors,
+    this.isDarkMode = true,
   });
 
   String _generateContent(String format) {
@@ -27,8 +29,19 @@ class ExportDialogWidget extends StatelessWidget {
         }
         buffer.write('</resources>');
         return buffer.toString();
+      case 'csv':
+        final buffer = StringBuffer('Index,Hex,RGB,HSL,CMYK\n');
+        for (int i = 0; i < colors.length; i++) {
+          final c = colors[i];
+          final hex = ColorManager.colorToHex(c);
+          final rgb = ColorManager.colorToRgbString(c).replaceAll('RGB(', '').replaceAll(')', '');
+          final hsl = ColorManager.colorToHslString(c).replaceAll('HSL(', '').replaceAll(')', '');
+          final cmyk = ColorManager.colorToCmykString(c).replaceAll('CMYK(', '').replaceAll(')', '');
+          buffer.writeln('${i + 1},"$hex","$rgb","$hsl","$cmyk"');
+        }
+        return buffer.toString();
       default:
-        return '';
+        return hexList.join(', ');
     }
   }
 
@@ -46,18 +59,20 @@ class ExportDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final txtColor = GoldTheme.textColor(isDarkMode);
+
     return Dialog(
-      backgroundColor: GoldTheme.darkCard,
-      shape: GoldTheme.goldBorderShape(borderRadius: 20),
+      backgroundColor: GoldTheme.cardColor(isDarkMode),
+      shape: GoldTheme.goldBorderShape(borderRadius: 20, isDarkMode: isDarkMode),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               "EXPORTAR PALETA",
               style: TextStyle(
-                color: GoldTheme.goldLight,
+                color: GoldTheme.accentTitleColor(isDarkMode),
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.5,
@@ -68,6 +83,7 @@ class ExportDialogWidget extends StatelessWidget {
               title: "Variables CSS",
               subtitle: "Para desarrollo Web",
               icon: Icons.code,
+              isDarkMode: isDarkMode,
               onTap: () => _copyToClipboard(context, 'css'),
             ),
             const SizedBox(height: 10),
@@ -75,6 +91,7 @@ class ExportDialogWidget extends StatelessWidget {
               title: "Arreglo JSON",
               subtitle: "Para integraciones y config",
               icon: Icons.data_array,
+              isDarkMode: isDarkMode,
               onTap: () => _copyToClipboard(context, 'json'),
             ),
             const SizedBox(height: 10),
@@ -82,12 +99,21 @@ class ExportDialogWidget extends StatelessWidget {
               title: "Android XML",
               subtitle: "Para colors.xml en Android",
               icon: Icons.android,
+              isDarkMode: isDarkMode,
               onTap: () => _copyToClipboard(context, 'xml'),
+            ),
+            const SizedBox(height: 10),
+            _ExportOptionTile(
+              title: "Tabla CSV",
+              subtitle: "Para Excel, Figma y hojas de cálculo",
+              icon: Icons.table_chart,
+              isDarkMode: isDarkMode,
+              onTap: () => _copyToClipboard(context, 'csv'),
             ),
             const SizedBox(height: 16),
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text("CANCELAR", style: TextStyle(color: Colors.grey)),
+              child: Text("CANCELAR", style: TextStyle(color: txtColor.withOpacity(0.6))),
             ),
           ],
         ),
@@ -100,12 +126,14 @@ class _ExportOptionTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final bool isDarkMode;
   final VoidCallback onTap;
 
   const _ExportOptionTile({
     required this.title,
     required this.subtitle,
     required this.icon,
+    required this.isDarkMode,
     required this.onTap,
   });
 
@@ -117,7 +145,7 @@ class _ExportOptionTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.black38,
+          color: GoldTheme.cardInputColor(isDarkMode),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: GoldTheme.goldMid.withOpacity(0.5)),
         ),
@@ -131,8 +159,8 @@ class _ExportOptionTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: GoldTheme.textColor(isDarkMode),
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
@@ -144,7 +172,7 @@ class _ExportOptionTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.copy, color: GoldTheme.goldLight, size: 18),
+            const Icon(Icons.copy, color: GoldTheme.goldMid, size: 18),
           ],
         ),
       ),

@@ -25,9 +25,12 @@ class SettingsDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final txtColor = GoldTheme.textColor(isDarkMode);
+    final inputBg = GoldTheme.cardInputColor(isDarkMode);
+
     return Dialog(
-      backgroundColor: GoldTheme.darkCard,
-      shape: GoldTheme.goldBorderShape(borderRadius: 24),
+      backgroundColor: GoldTheme.cardColor(isDarkMode),
+      shape: GoldTheme.goldBorderShape(borderRadius: 24, isDarkMode: isDarkMode),
       child: Padding(
         padding: const EdgeInsets.all(22),
         child: SingleChildScrollView(
@@ -37,10 +40,10 @@ class SettingsDialogWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "AJUSTES",
                     style: TextStyle(
-                      color: GoldTheme.goldLight,
+                      color: GoldTheme.accentTitleColor(isDarkMode),
                       fontSize: 20,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
@@ -59,16 +62,18 @@ class SettingsDialogWidget extends StatelessWidget {
                 icon: Icons.workspace_premium,
                 title: "Modo Oro (Premium)",
                 value: isGoldMode,
+                isDarkMode: isDarkMode,
                 onChanged: onToggleGoldMode,
               ),
 
               const SizedBox(height: 10),
 
-              // Dark Mode
+              // Dark Mode Toggle
               _SettingsSwitchTile(
                 icon: Icons.dark_mode,
                 title: "Modo Oscuro",
                 value: isDarkMode,
+                isDarkMode: isDarkMode,
                 onChanged: onToggleDarkMode,
               ),
 
@@ -78,7 +83,7 @@ class SettingsDialogWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.black38,
+                  color: inputBg,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: GoldTheme.goldMid.withOpacity(0.5)),
                 ),
@@ -86,17 +91,17 @@ class SettingsDialogWidget extends StatelessWidget {
                   children: [
                     const Icon(Icons.visibility, color: GoldTheme.goldMid, size: 22),
                     const SizedBox(width: 12),
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         "Daltonismo",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(color: txtColor, fontWeight: FontWeight.bold),
                       ),
                     ),
                     DropdownButton<String>(
                       value: colorBlindnessMode,
-                      dropdownColor: GoldTheme.darkCard,
+                      dropdownColor: GoldTheme.cardColor(isDarkMode),
                       underline: const SizedBox(),
-                      style: const TextStyle(color: GoldTheme.goldLight, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: GoldTheme.accentTitleColor(isDarkMode), fontWeight: FontWeight.bold),
                       items: const [
                         DropdownMenuItem(value: 'None', child: Text('Ninguno')),
                         DropdownMenuItem(value: 'Protanopia', child: Text('Protanopia')),
@@ -123,6 +128,7 @@ class SettingsDialogWidget extends StatelessWidget {
                     context: context,
                     builder: (context) => SpectrumDialogWidget(
                       onSelectColor: onSelectSpectrumColor,
+                      isDarkMode: isDarkMode,
                     ),
                   );
                 },
@@ -130,21 +136,21 @@ class SettingsDialogWidget extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   decoration: BoxDecoration(
-                    color: Colors.black38,
+                    color: inputBg,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: GoldTheme.goldMid.withOpacity(0.5)),
                   ),
                   child: Row(
-                    children: const [
-                      Icon(Icons.wb_sunny, color: GoldTheme.goldMid, size: 22),
-                      SizedBox(width: 12),
+                    children: [
+                      const Icon(Icons.wb_sunny, color: GoldTheme.goldMid, size: 22),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           "Convertidor de Espectro (nm)",
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: txtColor, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Icon(Icons.arrow_forward_ios, color: GoldTheme.goldLight, size: 16),
+                      Icon(Icons.arrow_forward_ios, color: GoldTheme.accentTitleColor(isDarkMode), size: 16),
                     ],
                   ),
                 ),
@@ -152,9 +158,9 @@ class SettingsDialogWidget extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              const Text(
-                "HexColor PRO v1.0.6 Flutter",
-                style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.bold),
+              Text(
+                "HexColor PRO v1.1.0 (Rust Accelerated)",
+                style: TextStyle(color: txtColor.withOpacity(0.6), fontSize: 11, fontWeight: FontWeight.bold),
               ),
               const Text(
                 "Creado con ❤️ por JAYLIZ",
@@ -172,12 +178,14 @@ class _SettingsSwitchTile extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool value;
+  final bool isDarkMode;
   final ValueChanged<bool> onChanged;
 
   const _SettingsSwitchTile({
     required this.icon,
     required this.title,
     required this.value,
+    required this.isDarkMode,
     required this.onChanged,
   });
 
@@ -186,7 +194,7 @@ class _SettingsSwitchTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.black38,
+        color: GoldTheme.cardInputColor(isDarkMode),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: GoldTheme.goldMid.withOpacity(0.5)),
       ),
@@ -197,7 +205,7 @@ class _SettingsSwitchTile extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(color: GoldTheme.textColor(isDarkMode), fontWeight: FontWeight.bold),
             ),
           ),
           Switch(

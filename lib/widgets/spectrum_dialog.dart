@@ -5,10 +5,12 @@ import '../theme/gold_theme.dart';
 
 class SpectrumDialogWidget extends StatefulWidget {
   final ValueChanged<Color> onSelectColor;
+  final bool isDarkMode;
 
   const SpectrumDialogWidget({
     super.key,
     required this.onSelectColor,
+    this.isDarkMode = true,
   });
 
   @override
@@ -22,19 +24,20 @@ class _SpectrumDialogWidgetState extends State<SpectrumDialogWidget> {
   Widget build(BuildContext context) {
     final currentColor = ColorManager.wavelengthToColor(_wavelength);
     final hexStr = ColorManager.colorToHex(currentColor);
+    final txtColor = GoldTheme.textColor(widget.isDarkMode);
 
     return Dialog(
-      backgroundColor: GoldTheme.darkCard,
-      shape: GoldTheme.goldBorderShape(borderRadius: 20),
+      backgroundColor: GoldTheme.cardColor(widget.isDarkMode),
+      shape: GoldTheme.goldBorderShape(borderRadius: 20, isDarkMode: widget.isDarkMode),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               "ESPECTRO VISIBLE (nm)",
               style: TextStyle(
-                color: GoldTheme.goldLight,
+                color: GoldTheme.accentTitleColor(widget.isDarkMode),
                 fontSize: 18,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.5,
@@ -74,7 +77,7 @@ class _SpectrumDialogWidgetState extends State<SpectrumDialogWidget> {
                     const Text("380 nm (UV)", style: TextStyle(color: Colors.grey, fontSize: 11)),
                     Text(
                       "${_wavelength.toStringAsFixed(1)} nm",
-                      style: const TextStyle(color: GoldTheme.goldLight, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: GoldTheme.accentTitleColor(widget.isDarkMode), fontWeight: FontWeight.bold),
                     ),
                     const Text("780 nm (IR)", style: TextStyle(color: Colors.grey, fontSize: 11)),
                   ],
@@ -84,7 +87,7 @@ class _SpectrumDialogWidgetState extends State<SpectrumDialogWidget> {
                   min: 380.0,
                   max: 780.0,
                   activeColor: GoldTheme.goldMid,
-                  inactiveColor: Colors.white24,
+                  inactiveColor: widget.isDarkMode ? Colors.white24 : Colors.black12,
                   onChanged: (val) {
                     setState(() {
                       _wavelength = val;
@@ -101,7 +104,7 @@ class _SpectrumDialogWidgetState extends State<SpectrumDialogWidget> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("CANCELAR", style: TextStyle(color: Colors.grey)),
+                  child: Text("CANCELAR", style: TextStyle(color: txtColor.withOpacity(0.6))),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(

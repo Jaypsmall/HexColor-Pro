@@ -1,49 +1,15 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'rust_engine.dart';
 
 class ColorManager {
   /// Converts Hex string (#RRGGBB or RRGGBB) to Color.
   static Color? hexToColor(String hex) {
-    try {
-      String cleanHex = hex.replaceAll('#', '').trim();
-      if (cleanHex.length == 6) {
-        cleanHex = 'FF$cleanHex';
-      }
-      return Color(int.parse(cleanHex, radix: 16));
-    } catch (_) {
-      return null;
-    }
+    return RustEngine.hexToColor(hex);
   }
 
   /// Converts Color to Hex string format (e.g. #FF5733).
   static String colorToHex(Color color, {bool includeAlpha = false}) {
-    int r = color.red;
-    int g = color.green;
-    int b = color.blue;
-
-    // Noise cleanup matching original Kotlin logic
-    if (r < 8 && g < 8 && b < 8) {
-      r = 0;
-      g = 0;
-      b = 0;
-    }
-    if (r > 248 && g > 248 && b > 248) {
-      r = 255;
-      g = 255;
-      b = 255;
-    }
-
-    if (includeAlpha) {
-      int a = color.alpha;
-      return '#${a.toRadixString(16).padLeft(2, '0')}'
-          '${r.toRadixString(16).padLeft(2, '0')}'
-          '${g.toRadixString(16).padLeft(2, '0')}'
-          '${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
-    }
-
-    return '#${r.toRadixString(16).padLeft(2, '0')}'
-        '${g.toRadixString(16).padLeft(2, '0')}'
-        '${b.toRadixString(16).padLeft(2, '0')}'.toUpperCase();
+    return RustEngine.colorToHex(color);
   }
 
   /// Calculates complementary color.
@@ -76,6 +42,44 @@ class ColorManager {
     }).toList();
   }
 
+  /// Generates tetradic (4-color square/rectangular) palette.
+  static List<Color> getTetradic(Color color) {
+    final hsv = HSVColor.fromColor(color);
+    return [0.0, 90.0, 180.0, 270.0].map((offset) {
+      final double newHue = (hsv.hue + offset) % 360;
+      return hsv.withHue(newHue).toColor();
+    }).toList();
+  }
+
+  /// Generates split-complementary palette.
+  static List<Color> getSplitComplementary(Color color) {
+    final hsv = HSVColor.fromColor(color);
+    return [0.0, 150.0, 210.0].map((offset) {
+      final double newHue = (hsv.hue + offset) % 360;
+      return hsv.withHue(newHue).toColor();
+    }).toList();
+  }
+
+  /// Generates monochromatic colors (varying value/saturation).
+  static List<Color> getMonochromatic(Color color, {int count = 5}) {
+    final hsv = HSVColor.fromColor(color);
+    final double step = count > 1 ? 0.8 / (count - 1) : 0.0;
+    return List.generate(count, (i) {
+      final double v = (0.2 + (i * step)).clamp(0.1, 1.0);
+      return hsv.withValue(v).toColor();
+    });
+  }
+
+  /// Generates shades (darker) and tints (lighter).
+  static List<Color> getShadesAndTints(Color color, {int count = 7}) {
+    final hsl = HSLColor.fromColor(color);
+    final double step = 1.0 / (count + 1);
+    return List.generate(count, (i) {
+      final double lightness = (step * (i + 1)).clamp(0.05, 0.95);
+      return hsl.withLightness(lightness).toColor();
+    });
+  }
+
   /// Converts HSV parameters to Color.
   static Color hsvToColor(double hue, [double saturation = 1.0, double value = 1.0]) {
     return HSVColor.fromAHSV(1.0, hue % 360, saturation.clamp(0.0, 1.0), value.clamp(0.0, 1.0)).toColor();
@@ -83,109 +87,52 @@ class ColorManager {
 
   /// Checks if color is dark (for text contrast).
   static bool isDark(Color color) {
-    final r = color.red.toDouble();
-    final g = color.green.toDouble();
-    final b = color.blue.toDouble();
+    final r = color.r * 255.0;
+    final g = color.g * 255.0;
+    final b = color.b * 255.0;
     final luminance = 0.299 * r + 0.587 * g + 0.114 * b;
     return luminance < 128;
   }
 
-  /// Calculates WCAG contrast ratio between two colors.
+  /// Calculates WCAG contrast ratio between two colors using Rust or Dart.
   static double getContrastRatio(Color color1, Color color2) {
-    double luminance(Color c) {
-      double calc(double val) => val <= 0.03928 ? val / 12.92 : pow((val + 0.055) / 1.055, 2.4).toDouble();
-      final r = calc(c.red / 255.0);
-      final g = calc(c.green / 255.0);
-      final b = calc(c.blue / 255.0);
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    }
-
-    final l1 = luminance(color1);
-    final l2 = luminance(color2);
-    return (max(l1, l2) + 0.05) / (min(l1, l2) + 0.05);
+    return RustEngine.getContrastRatio(color1, color2);
   }
 
-  /// Simulates color blindness types.
+  /// Simulates color blindness types using Rust engine or Dart.
   static Color simulateColorBlindness(Color color, String type) {
-    if (type == 'None') return color;
-
-    double toLinear(double c) => c <= 0.04045 ? c / 12.92 : pow((c + 0.055) / 1.055, 2.4).toDouble();
-    double fromLinear(double c) => c <= 0.0031308 ? c * 12.92 : 1.055 * pow(c, 1.0 / 2.4) - 0.055;
-
-    final rL = toLinear(color.red / 255.0);
-    final gL = toLinear(color.green / 255.0);
-    final bL = toLinear(color.blue / 255.0);
-
-    double nrL, ngL, nbL;
-
-    switch (type) {
-      case 'Protanopia':
-        nrL = 0.56667 * rL + 0.43333 * gL + 0.0 * bL;
-        ngL = 0.55833 * rL + 0.44167 * gL + 0.0 * bL;
-        nbL = 0.0 * rL + 0.24167 * gL + 0.75833 * bL;
-        break;
-      case 'Deuteranopia':
-        nrL = 0.625 * rL + 0.375 * gL + 0.0 * bL;
-        ngL = 0.7 * rL + 0.3 * gL + 0.0 * bL;
-        nbL = 0.0 * rL + 0.3 * gL + 0.7 * bL;
-        break;
-      case 'Tritanopia':
-        nrL = 1.01 * rL + 0.02 * gL - 0.03 * bL;
-        ngL = 0.10 * rL + 0.73 * gL + 0.17 * bL;
-        nbL = 0.0 * rL + 0.85 * gL + 0.15 * bL;
-        break;
-      default:
-        nrL = rL;
-        ngL = gL;
-        nbL = bL;
-    }
-
-    final r = (fromLinear(nrL) * 255).clamp(0, 255).round();
-    final g = (fromLinear(ngL) * 255).clamp(0, 255).round();
-    final b = (fromLinear(nbL) * 255).clamp(0, 255).round();
-
-    return Color.fromRGBO(r, g, b, color.opacity);
+    return RustEngine.simulateColorBlindness(color, type);
   }
 
   /// Calculates color from spectrum wavelength (380 - 780 nm).
   static Color wavelengthToColor(double wavelength) {
-    const double gamma = 0.80;
-    const double intensityMax = 255.0;
+    return RustEngine.wavelengthToColor(wavelength);
+  }
 
-    double rRaw = 0, gRaw = 0, bRaw = 0;
+  /// Returns RGB string format e.g. "RGB(255, 128, 0)"
+  static String colorToRgbString(Color color) {
+    int r = (color.r * 255.0).round();
+    int g = (color.g * 255.0).round();
+    int b = (color.b * 255.0).round();
+    return "RGB($r, $g, $b)";
+  }
 
-    if (wavelength >= 380 && wavelength < 440) {
-      final attenuation = 0.3 + 0.7 * (wavelength - 380) / (440 - 380);
-      rRaw = pow((-(wavelength - 440) / (440 - 380)) * attenuation, gamma).toDouble();
-      gRaw = 0.0;
-      bRaw = pow(1.0 * attenuation, gamma).toDouble();
-    } else if (wavelength >= 440 && wavelength < 490) {
-      rRaw = 0.0;
-      gRaw = pow((wavelength - 440) / (490 - 440), gamma).toDouble();
-      bRaw = 1.0;
-    } else if (wavelength >= 490 && wavelength < 510) {
-      rRaw = 0.0;
-      gRaw = 1.0;
-      bRaw = pow((-(wavelength - 510) / (510 - 490)), gamma).toDouble();
-    } else if (wavelength >= 510 && wavelength < 580) {
-      rRaw = pow((wavelength - 510) / (580 - 510), gamma).toDouble();
-      gRaw = 1.0;
-      bRaw = 0.0;
-    } else if (wavelength >= 580 && wavelength < 645) {
-      rRaw = 1.0;
-      gRaw = pow((-(wavelength - 645) / (645 - 580)), gamma).toDouble();
-      bRaw = 0.0;
-    } else if (wavelength >= 645 && wavelength <= 780) {
-      final attenuation = 0.3 + 0.7 * (780 - wavelength) / (780 - 645);
-      rRaw = pow(1.0 * attenuation, gamma).toDouble();
-      gRaw = 0.0;
-      bRaw = 0.0;
-    }
+  /// Returns HSL string format e.g. "HSL(210°, 80%, 50%)"
+  static String colorToHslString(Color color) {
+    final hsl = HSLColor.fromColor(color);
+    int h = hsl.hue.round();
+    int s = (hsl.saturation * 100).round();
+    int l = (hsl.lightness * 100).round();
+    return "HSL($h°, $s%, $l%)";
+  }
 
-    final r = (rRaw * intensityMax).round().clamp(0, 255);
-    final g = (gRaw * intensityMax).round().clamp(0, 255);
-    final b = (bRaw * intensityMax).round().clamp(0, 255);
-
-    return Color.fromRGBO(r, g, b, 1.0);
+  /// Returns CMYK string format e.g. "CMYK(0%, 50%, 100%, 0%)"
+  static String colorToCmykString(Color color) {
+    final cmyk = RustEngine.colorToCmyk(color);
+    int c = cmyk[0].round();
+    int m = cmyk[1].round();
+    int y = cmyk[2].round();
+    int k = cmyk[3].round();
+    return "CMYK($c%, $m%, $y%, $k%)";
   }
 }
