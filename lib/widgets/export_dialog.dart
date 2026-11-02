@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../color_manager.dart';
 import '../theme/gold_theme.dart';
@@ -45,16 +47,29 @@ class ExportDialogWidget extends StatelessWidget {
     }
   }
 
-  void _copyToClipboard(BuildContext context, String format) {
-    final content = _generateContent(format);
-    Clipboard.setData(ClipboardData(text: content));
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Exportado a portapapeles ($format)"),
-        backgroundColor: GoldTheme.goldMid,
-      ),
-    );
+  Future<void> _exportAndShareFile(BuildContext context, String format) async {
+    try {
+      final content = _generateContent(format);
+      final ext = format == 'xml' ? 'xml' : format;
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/palette_export_$format.$ext');
+      await file.writeAsString(content);
+
+      Navigator.of(context).pop();
+
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: 'Paleta HexColor PRO ($format)',
+      );
+    } catch (e) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error al exportar archivo: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -70,7 +85,7 @@ class ExportDialogWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "EXPORTAR PALETA",
+              "EXPORTAR ARCHIVO",
               style: TextStyle(
                 color: GoldTheme.accentTitleColor(isDarkMode),
                 fontSize: 18,
@@ -80,35 +95,35 @@ class ExportDialogWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _ExportOptionTile(
-              title: "Variables CSS",
-              subtitle: "Para desarrollo Web",
+              title: "Variables CSS (.css)",
+              subtitle: "Exportar e importar archivo CSS",
               icon: Icons.code,
               isDarkMode: isDarkMode,
-              onTap: () => _copyToClipboard(context, 'css'),
+              onTap: () => _exportAndShareFile(context, 'css'),
             ),
             const SizedBox(height: 10),
             _ExportOptionTile(
-              title: "Arreglo JSON",
-              subtitle: "Para integraciones y config",
+              title: "Arreglo JSON (.json)",
+              subtitle: "Exportar e importar archivo JSON",
               icon: Icons.data_array,
               isDarkMode: isDarkMode,
-              onTap: () => _copyToClipboard(context, 'json'),
+              onTap: () => _exportAndShareFile(context, 'json'),
             ),
             const SizedBox(height: 10),
             _ExportOptionTile(
-              title: "Android XML",
-              subtitle: "Para colors.xml en Android",
+              title: "Android XML (.xml)",
+              subtitle: "Exportar e importar recurso XML",
               icon: Icons.android,
               isDarkMode: isDarkMode,
-              onTap: () => _copyToClipboard(context, 'xml'),
+              onTap: () => _exportAndShareFile(context, 'xml'),
             ),
             const SizedBox(height: 10),
             _ExportOptionTile(
-              title: "Tabla CSV",
-              subtitle: "Para Excel, Figma y hojas de cálculo",
+              title: "Tabla CSV (.csv)",
+              subtitle: "Exportar e importar hoja CSV",
               icon: Icons.table_chart,
               isDarkMode: isDarkMode,
-              onTap: () => _copyToClipboard(context, 'csv'),
+              onTap: () => _exportAndShareFile(context, 'csv'),
             ),
             const SizedBox(height: 16),
             TextButton(
@@ -172,7 +187,7 @@ class _ExportOptionTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.copy, color: GoldTheme.goldMid, size: 18),
+            const Icon(Icons.share, color: GoldTheme.goldMid, size: 18),
           ],
         ),
       ),

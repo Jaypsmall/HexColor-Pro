@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,17 +21,32 @@ void main() async {
   runApp(const HexColorApp());
 }
 
-class HexColorApp extends StatefulWidget {
+class HexColorApp extends StatelessWidget {
   const HexColorApp({super.key});
 
   @override
-  State<HexColorApp> createState() => _HexColorAppState();
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'HexColor PRO',
+      debugShowCheckedModeBanner: false,
+      home: MainScreen(),
+    );
+  }
 }
 
-class _HexColorAppState extends State<HexColorApp> {
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
   bool _isDarkMode = true;
   bool _isGoldMode = true;
   String _colorBlindnessMode = 'None';
+  bool _isPageScrollable = true;
+  int _analogousCount = 7;
 
   Color _currentColor = const Color(0xFF21DD10);
   late HSVColor _hsv;
@@ -111,8 +128,71 @@ class _HexColorAppState extends State<HexColorApp> {
         colorBlindnessMode: _colorBlindnessMode,
         onColorBlindnessChanged: (val) => setState(() => _colorBlindnessMode = val),
         onSelectSpectrumColor: _updateColor,
+        analogousCount: _analogousCount,
+        onAnalogousCountChanged: (val) => setState(() => _analogousCount = val),
       ),
     );
+  }
+
+  Future<void> _importPaletteFromFile() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final file = File(filePath);
+        final content = await file.readAsString();
+
+        final regex = RegExp(r'#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})');
+        final matches = regex.allMatches(content);
+
+        List<String> importedHexes = [];
+        for (final match in matches) {
+          final hex = match.group(0);
+          if (hex != null) {
+            importedHexes.add(hex);
+          }
+        }
+
+        if (importedHexes.isNotEmpty) {
+          for (final hex in importedHexes) {
+            await _favManager.addFavorite(hex);
+          }
+          final firstColor = ColorManager.hexToColor(importedHexes.first) ?? Colors.grey;
+          _updateColor(firstColor);
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("¡Importados ${importedHexes.length} colores a favoritos!"),
+                backgroundColor: GoldTheme.goldMid,
+              ),
+            );
+          }
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("No se encontraron códigos de color válidos en el archivo."),
+                backgroundColor: Colors.orange,
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error al importar archivo: $e"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -141,7 +221,17 @@ class _HexColorAppState extends State<HexColorApp> {
           ),
           title: Row(
             children: [
-              const Icon(Icons.hexagon_outlined, color: GoldTheme.goldMid, size: 30),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.asset(
+                  'assets/icono_hex_radial.png',
+                  width: 30,
+                  height: 30,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.hexagon_outlined, color: GoldTheme.goldMid, size: 30),
+                ),
+              ),
               const SizedBox(width: 8),
               Text(
                 "HEXCOLOR PRO",
@@ -216,6 +306,7 @@ class _HexColorAppState extends State<HexColorApp> {
           children: [
             PageView(
               controller: _pageController,
+              physics: _isPageScrollable ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
               onPageChanged: (index) {
                 setState(() {
                   _selectedTabIndex = index;
@@ -243,6 +334,10 @@ class _HexColorAppState extends State<HexColorApp> {
                   isDarkMode: _isDarkMode,
                   colorBlindnessMode: _colorBlindnessMode,
                   onColorBlindnessChanged: (val) => setState(() => _colorBlindnessMode = val),
+                  analogousCount: _analogousCount,
+                  onWheelInteracting: (isInteracting) {
+                    setState(() => _isPageScrollable = !isInteracting);
+                  },
                 ),
                 PickerScreen(
                   onColorSelected: (c) {
@@ -301,7 +396,17 @@ class _HexColorAppState extends State<HexColorApp> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  const Icon(Icons.hexagon, color: GoldTheme.goldMid, size: 60),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      'assets/icono_hex_radial.png',
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.hexagon, color: GoldTheme.goldMid, size: 60),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   Text(
                     "HEXCOLOR PRO",
@@ -363,6 +468,15 @@ class _HexColorAppState extends State<HexColorApp> {
                     onTap: () {
                       Navigator.of(context).pop();
                       _navigateToTab(3);
+                    },
+                  ),
+                  _DrawerItem(
+                    icon: Icons.folder_open,
+                    title: "Importar Archivo / Paleta",
+                    textColor: txtColor,
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _importPaletteFromFile();
                     },
                   ),
                   _DrawerItem(

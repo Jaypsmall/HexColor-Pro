@@ -11,6 +11,8 @@ class SettingsDialogWidget extends StatelessWidget {
   final String colorBlindnessMode;
   final ValueChanged<String> onColorBlindnessChanged;
   final ValueChanged<Color> onSelectSpectrumColor;
+  final int analogousCount;
+  final ValueChanged<int> onAnalogousCountChanged;
 
   const SettingsDialogWidget({
     super.key,
@@ -21,6 +23,8 @@ class SettingsDialogWidget extends StatelessWidget {
     required this.colorBlindnessMode,
     required this.onColorBlindnessChanged,
     required this.onSelectSpectrumColor,
+    required this.analogousCount,
+    required this.onAnalogousCountChanged,
   });
 
   @override
@@ -79,6 +83,45 @@ class SettingsDialogWidget extends StatelessWidget {
 
               const SizedBox(height: 16),
 
+              // Analogous Count Slider Tile
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: inputBg,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: GoldTheme.goldMid.withOpacity(0.5)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.analytics, color: GoldTheme.goldMid, size: 22),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            "Colores Análogos: $analogousCount",
+                            style: TextStyle(color: txtColor, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Slider(
+                      value: analogousCount.toDouble(),
+                      min: 3,
+                      max: 11,
+                      divisions: 4,
+                      activeColor: GoldTheme.goldMid,
+                      inactiveColor: isDarkMode ? Colors.white24 : Colors.black12,
+                      onChanged: (val) => onAnalogousCountChanged(val.toInt()),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
               // Color Blindness Dropdown Tile
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
@@ -107,6 +150,7 @@ class SettingsDialogWidget extends StatelessWidget {
                         DropdownMenuItem(value: 'Protanopia', child: Text('Protanopia')),
                         DropdownMenuItem(value: 'Deuteranopia', child: Text('Deuteranopia')),
                         DropdownMenuItem(value: 'Tritanopia', child: Text('Tritanopia')),
+                        DropdownMenuItem(value: 'Achromatopsia', child: Text('Acromatopsia')),
                       ],
                       onChanged: (val) {
                         if (val != null) {

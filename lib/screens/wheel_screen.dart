@@ -17,6 +17,8 @@ class WheelScreen extends StatefulWidget {
   final bool isDarkMode;
   final String colorBlindnessMode;
   final ValueChanged<String> onColorBlindnessChanged;
+  final int analogousCount;
+  final ValueChanged<bool>? onWheelInteracting;
 
   const WheelScreen({
     super.key,
@@ -29,6 +31,8 @@ class WheelScreen extends StatefulWidget {
     this.isDarkMode = true,
     this.colorBlindnessMode = 'None',
     required this.onColorBlindnessChanged,
+    this.analogousCount = 7,
+    this.onWheelInteracting,
   });
 
   @override
@@ -37,8 +41,8 @@ class WheelScreen extends StatefulWidget {
 
 class _WheelScreenState extends State<WheelScreen> {
   HarmonyMode _harmonyMode = HarmonyMode.complementary;
-  final int _analogousCount = 7;
   bool _isShadowMode = false;
+  bool _isWheelDragging = false;
   final FavoritesManager _favManager = FavoritesManager();
 
   @override
@@ -57,13 +61,25 @@ class _WheelScreenState extends State<WheelScreen> {
     if (mounted) setState(() {});
   }
 
-  void _toggleMoonShadowMode() {
+  void _onMoonTapped() {
     setState(() {
       _isShadowMode = !_isShadowMode;
       if (_isShadowMode) {
-        _harmonyMode = HarmonyMode.shades;
+        // Shadow mode: show shadow moon, set brightness to 50%
+        final newColor = ColorManager.hsvToColor(
+          widget.hsv.hue,
+          widget.hsv.saturation,
+          0.5,
+        );
+        widget.onColorChanged(newColor);
       } else {
-        _harmonyMode = HarmonyMode.complementary;
+        // Light mode: show light moon, restore brightness to 100% (or current)
+        final newColor = ColorManager.hsvToColor(
+          widget.hsv.hue,
+          widget.hsv.saturation,
+          1.0,
+        );
+        widget.onColorChanged(newColor);
       }
     });
 
@@ -71,13 +87,22 @@ class _WheelScreenState extends State<WheelScreen> {
       SnackBar(
         content: Text(
           _isShadowMode
-              ? "Modo Sombras Activado 🌙"
-              : "Modo Luz Normal Activado ☀️",
+              ? "Modo Sombras Activado 🌙 (Brillo al 50%)"
+              : "Modo Luz Normal Activado ☀️ (Brillo al 100%)",
         ),
         backgroundColor: GoldTheme.goldMid,
         duration: const Duration(seconds: 1),
       ),
     );
+  }
+
+  void _setWheelDragging(bool dragging) {
+    if (_isWheelDragging != dragging) {
+      setState(() {
+        _isWheelDragging = dragging;
+      });
+      widget.onWheelInteracting?.call(dragging);
+    }
   }
 
   List<Color> _calculateHarmonyColors() {
@@ -94,7 +119,7 @@ class _WheelScreenState extends State<WheelScreen> {
       case HarmonyMode.triadic:
         return ColorManager.getTriadic(widget.currentColor);
       case HarmonyMode.analogous:
-        return ColorManager.getAnalogous(widget.currentColor, count: _analogousCount);
+        return ColorManager.getAnalogous(widget.currentColor, count: widget.analogousCount);
       case HarmonyMode.tetradic:
         return ColorManager.getTetradic(widget.currentColor);
       case HarmonyMode.splitComplementary:
@@ -123,107 +148,123 @@ class _WheelScreenState extends State<WheelScreen> {
     final isFav = _favManager.isFavorite(widget.currentColor);
 
     return SingleChildScrollView(
+      physics: _isWheelDragging ? const NeverScrollableScrollPhysics() : const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Column(
         children: [
-          // Header Harmony Selector Row & Export/Favorite Actions
-          Row(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _HarmonyChip(
-                        label: "COMPLEMENTARIO",
-                        isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.complementary,
-                        isDarkMode: widget.isDarkMode,
-                        onTap: () => setState(() {
-                          _isShadowMode = false;
-                          _harmonyMode = HarmonyMode.complementary;
-                        }),
-                      ),
-                      const SizedBox(width: 6),
-                      _HarmonyChip(
-                        label: "TRIÁDICO",
-                        isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.triadic,
-                        isDarkMode: widget.isDarkMode,
-                        onTap: () => setState(() {
-                          _isShadowMode = false;
-                          _harmonyMode = HarmonyMode.triadic;
-                        }),
-                      ),
-                      const SizedBox(width: 6),
-                      _HarmonyChip(
-                        label: "ANÁLOGO",
-                        isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.analogous,
-                        isDarkMode: widget.isDarkMode,
-                        onTap: () => setState(() {
-                          _isShadowMode = false;
-                          _harmonyMode = HarmonyMode.analogous;
-                        }),
-                      ),
-                      const SizedBox(width: 6),
-                      _HarmonyChip(
-                        label: "TETRÁDICO",
-                        isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.tetradic,
-                        isDarkMode: widget.isDarkMode,
-                        onTap: () => setState(() {
-                          _isShadowMode = false;
-                          _harmonyMode = HarmonyMode.tetradic;
-                        }),
-                      ),
-                      const SizedBox(width: 6),
-                      _HarmonyChip(
-                        label: "SOMBRAS",
-                        isSelected: _isShadowMode || _harmonyMode == HarmonyMode.shades,
-                        isDarkMode: widget.isDarkMode,
-                        onTap: () => setState(() {
-                          _isShadowMode = true;
-                          _harmonyMode = HarmonyMode.shades;
-                        }),
-                      ),
-                    ],
-                  ),
+          // Header Harmony Selector Row (Scrollable chips)
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _HarmonyChip(
+                  label: "COMPLEMENTARIO",
+                  isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.complementary,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() {
+                    _isShadowMode = false;
+                    _harmonyMode = HarmonyMode.complementary;
+                  }),
                 ),
-              ),
-              const SizedBox(width: 6),
-              IconButton(
+                const SizedBox(width: 6),
+                _HarmonyChip(
+                  label: "TRIÁDICO",
+                  isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.triadic,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() {
+                    _isShadowMode = false;
+                    _harmonyMode = HarmonyMode.triadic;
+                  }),
+                ),
+                const SizedBox(width: 6),
+                _HarmonyChip(
+                  label: "ANÁLOGO",
+                  isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.analogous,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() {
+                    _isShadowMode = false;
+                    _harmonyMode = HarmonyMode.analogous;
+                  }),
+                ),
+                const SizedBox(width: 6),
+                _HarmonyChip(
+                  label: "TETRÁDICO",
+                  isSelected: !_isShadowMode && _harmonyMode == HarmonyMode.tetradic,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() {
+                    _isShadowMode = false;
+                    _harmonyMode = HarmonyMode.tetradic;
+                  }),
+                ),
+                const SizedBox(width: 6),
+                _HarmonyChip(
+                  label: "SOMBRAS",
+                  isSelected: _isShadowMode || _harmonyMode == HarmonyMode.shades,
+                  isDarkMode: widget.isDarkMode,
+                  onTap: () => setState(() {
+                    _isShadowMode = true;
+                    _harmonyMode = HarmonyMode.shades;
+                  }),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // Action Buttons Row (Favorite & Share) below chips so they never overlap
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              OutlinedButton.icon(
                 onPressed: () => widget.onToggleFavorite(widget.currentColor),
                 icon: Icon(
                   isFav ? Icons.star : Icons.star_border,
                   color: isFav ? GoldTheme.goldLight : GoldTheme.accentTitleColor(widget.isDarkMode),
+                  size: 16,
                 ),
-                style: IconButton.styleFrom(
+                label: Text(
+                  isFav ? "Favorito" : "Guardar",
+                  style: TextStyle(color: GoldTheme.accentTitleColor(widget.isDarkMode), fontSize: 11),
+                ),
+                style: OutlinedButton.styleFrom(
                   backgroundColor: widget.isDarkMode ? Colors.black45 : Colors.black12,
                   side: const BorderSide(color: GoldTheme.goldMid, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 ),
               ),
-              const SizedBox(width: 4),
-              IconButton(
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
                 onPressed: _showExportDialog,
-                icon: Icon(Icons.share, color: GoldTheme.accentTitleColor(widget.isDarkMode)),
-                style: IconButton.styleFrom(
+                icon: const Icon(Icons.share, color: GoldTheme.goldMid, size: 16),
+                label: const Text(
+                  "Exportar",
+                  style: TextStyle(color: GoldTheme.goldMid, fontSize: 11),
+                ),
+                style: OutlinedButton.styleFrom(
                   backgroundColor: widget.isDarkMode ? Colors.black45 : Colors.black12,
                   side: const BorderSide(color: GoldTheme.goldMid, width: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 16),
+          const SizedBox(height: 24), // Extra spacing so number dots don't touch buttons above
 
-          // Interactive Color Wheel with Center Moon (taps switch shadow mode)
+          // Interactive Color Wheel with Center Moon
           SizedBox(
-            height: 320,
+            height: 260,
             width: double.infinity,
             child: ColorWheelWidget(
               currentColor: widget.currentColor,
               hsv: widget.hsv,
               harmonyMode: _harmonyMode,
-              analogousCount: _analogousCount,
+              analogousCount: widget.analogousCount,
               onColorChanged: widget.onColorChanged,
-              onMoonTapped: _toggleMoonShadowMode,
+              onMoonTapped: _onMoonTapped,
+              onPanStart: () => _setWheelDragging(true),
+              onPanEnd: () => _setWheelDragging(false),
               isShadowMode: _isShadowMode,
               colorBlindnessMode: widget.colorBlindnessMode,
               isGoldMode: widget.isGoldMode,

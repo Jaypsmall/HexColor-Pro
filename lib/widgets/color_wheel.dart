@@ -13,6 +13,8 @@ class ColorWheelWidget extends StatelessWidget {
   final ValueChanged<Color> onColorChanged;
   final ValueChanged<Color>? onColorTapped;
   final VoidCallback? onMoonTapped;
+  final VoidCallback? onPanStart;
+  final VoidCallback? onPanEnd;
   final bool isShadowMode;
   final String colorBlindnessMode;
   final bool isGoldMode;
@@ -28,6 +30,8 @@ class ColorWheelWidget extends StatelessWidget {
     required this.onColorChanged,
     this.onColorTapped,
     this.onMoonTapped,
+    this.onPanStart,
+    this.onPanEnd,
     this.isShadowMode = false,
     this.colorBlindnessMode = 'None',
     this.isGoldMode = true,
@@ -84,11 +88,16 @@ class ColorWheelWidget extends StatelessWidget {
       builder: (context, constraints) {
         final size = Size(constraints.maxWidth, constraints.maxHeight);
         final minDim = min(size.width, size.height);
-        final moonSize = minDim * 0.32;
+        final moonSize = minDim * 0.50;
 
         return GestureDetector(
-          onPanStart: (details) => _handleTouch(details.localPosition, size),
+          onPanStart: (details) {
+            onPanStart?.call();
+            _handleTouch(details.localPosition, size);
+          },
           onPanUpdate: (details) => _handleTouch(details.localPosition, size),
+          onPanEnd: (_) => onPanEnd?.call(),
+          onPanCancel: () => onPanEnd?.call(),
           onTapDown: (details) => _handleTouch(details.localPosition, size),
           child: Stack(
             alignment: Alignment.center,
@@ -122,7 +131,7 @@ class ColorWheelWidget extends StatelessWidget {
                   ),
                   child: ClipOval(
                     child: Image.asset(
-                      isShadowMode ? 'assets/moon_shadow.PNG' : 'assets/moon_light.png',
+                      isShadowMode ? 'assets/moon_shadow.png' : 'assets/moon_light.png',
                       width: moonSize,
                       height: moonSize,
                       fit: BoxFit.cover,

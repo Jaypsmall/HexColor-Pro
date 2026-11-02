@@ -74,7 +74,7 @@ Exporta tus paletas con un toque a los formatos más utilizados en desarrollo e 
 ```
 HexColorPro/
 ├── android/                   # Configuración y wrappers nativos de Android
-├── assets/                    # Recursos gráficos (moon_light.png, moon_shadow.PNG)
+├── assets/                    # Recursos gráficos (moon_light.png, moon_shadow.png)
 ├── lib/
 │   ├── main.dart              # Punto de entrada y PageView con deslizamiento
 │   ├── color_manager.dart     # Métodos principales y llamadas al motor
