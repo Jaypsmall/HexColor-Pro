@@ -68,11 +68,6 @@ class ColorWheelWidget extends StatelessWidget {
 
     if (radius <= 0) return;
 
-    // Avoid hijacking taps close to the center moon (radius * 0.28)
-    if (dist < radius * 0.26) {
-      return;
-    }
-
     double hue = (atan2(pos.dy, pos.dx) * (180.0 / pi) + 360.0) % 360.0;
     double saturation = (dist / radius).clamp(0.0, 1.0);
 
@@ -222,16 +217,21 @@ class _WheelPainter extends CustomPainter {
       canvas.drawCircle(center, r, desatPaint);
     }
 
-    // 2. Guide Line to Main Hue
-    final mainRad = hsv.hue * pi / 180.0;
-    final linePaint = Paint()
-      ..color = Colors.white.withOpacity(0.6)
-      ..strokeWidth = 2.0;
-    canvas.drawLine(
-      center,
-      Offset(center.dx + radius * cos(mainRad), center.dy + radius * sin(mainRad)),
-      linePaint,
-    );
+    // 2. Guide Lines for Main Hue & All Harmony Targets
+    for (int i = 0; i < harmonyOffsets.length; i++) {
+      final offsetAngle = harmonyOffsets[i];
+      final targetHue = (hsv.hue + offsetAngle + 360.0) % 360.0;
+      final rad = targetHue * pi / 180.0;
+
+      final harmonyLinePaint = Paint()
+        ..color = Colors.white.withOpacity(i == 0 ? 0.7 : 0.4)
+        ..strokeWidth = i == 0 ? 2.0 : 1.5;
+      canvas.drawLine(
+        center,
+        Offset(center.dx + radius * cos(rad), center.dy + radius * sin(rad)),
+        harmonyLinePaint,
+      );
+    }
 
     // 3. Harmony Targets/Dots
     for (int i = 0; i < harmonyOffsets.length; i++) {
@@ -280,6 +280,7 @@ class _WheelPainter extends CustomPainter {
 
     // 4. Handle Selector Dot at current (Hue, Saturation)
     final handleDist = hsv.saturation * radius;
+    final mainRad = hsv.hue * pi / 180.0;
     final handlePos = Offset(
       center.dx + handleDist * cos(mainRad),
       center.dy + handleDist * sin(mainRad),

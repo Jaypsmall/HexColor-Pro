@@ -83,6 +83,7 @@ class GoldTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: bg,
         elevation: 0,
+        scrolledUnderElevation: 0,
         iconTheme: IconThemeData(color: accentTitleColor(isDarkMode)),
         titleTextStyle: TextStyle(
           color: accentTitleColor(isDarkMode),
