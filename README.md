@@ -7,9 +7,9 @@
 **HexColor PRO** es una aplicación avanzada e interactiva de diseño y cálculo de espacios de color impulsada por un motor de alto rendimiento escrito en **Rust** e integrada en **Flutter**. Diseñada para desarrolladores, diseñadores gráficos y profesionales del color.
 
 <p align="center">
-  <a href="https://kotlinlang.org" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="50" alt="Kotlin" /></a> &nbsp;&nbsp;
-  <a href="https://flutter.dev" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" height="50" alt="Flutter" /></a> &nbsp;&nbsp;
-  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="50" alt="Rust" /></a>
+  <a href="https://kotlinlang.org" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="60" alt="Kotlin" /></a> &nbsp;&nbsp;
+  <a href="https://flutter.dev" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" height="60" alt="Flutter" /></a> &nbsp;&nbsp;
+  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="60" alt="Rust" /></a>
 </p>
 
 ---
