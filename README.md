@@ -44,7 +44,6 @@
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/1db2cf75a08088d1d9cbd070cbb85d0afff6f4e1/docs/assets/6n.png" width="20%" />&nbsp;   
 </p>
 
-
 ---
 
 ### 🌓 3. Modo Claro y Modo Oscuro (Gold Theme)
@@ -91,7 +90,6 @@
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b11b.png" width="20%" />&nbsp;   
 </p>
 
-
 ---
 
 ### 📤 7. Exportación Multiformato
@@ -100,6 +98,13 @@ Exporta tus paletas con un toque a los formatos más utilizados en desarrollo e 
 - **Arreglo JSON** (`["#FF5733", "#33FF57"]`)
 - **Android XML** (`<color name="palette_1">#FF5733</color>`)
 - **Tabla CSV** (Para Excel, Figma y hojas de cálculo)
+
+<p align="center"> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/16n.png" width="20%" />&nbsp; 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/14n.png" width="20%" />&nbsp;
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/13n.png" width="20%" />&nbsp;&nbsp;&nbsp; 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/b12b.png" width="20%" />&nbsp;   
+</p>
 
 ---
 
