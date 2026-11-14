@@ -43,6 +43,13 @@
 - **Diseño Premium**: Paleta visual dorada adaptativa con sombras elegantes y bordes pulidos.
 - **Tema Adaptativo**: Alterna en tiempo real entre un modo oscuro profesional y un modo claro radiante con fondos `#F4F5F8` y tarjetas blancas contrastadas.
 
+<p align="center"> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/1n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/2n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/b1.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/b02.png" width="20%" />   
+</p>
+
 ---
 
 ### 👆 4. Navegación por Desplazamiento Táctil (Swipe)
@@ -54,6 +61,13 @@
 ### 📸 5. Extractor de Imagen y Modo Sniper (Cámara)
 - **Camara Sniper en Vivo**: Retícula móvil en tiempo real para capturar cualquier color del mundo real directamente desde la cámara trasera.
 - **Extractor de Paletas**: Carga imágenes desde la galería y extrae automáticamente los colores dominantes utilizando cuantización de imágenes.
+
+<p align="center"> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/7n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/15n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/b8.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/b9.png" width="20%" />   
+</p>
 
 ---
 
