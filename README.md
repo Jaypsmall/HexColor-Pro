@@ -45,7 +45,7 @@
 
 <p align="center"> 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/1n.png" width="20%" /> 
-<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/2n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/2n.png" width="20%" />&nbsp; &nbsp; 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/b1.png" width="20%" /> 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/b02.png" width="20%" />   
 </p>
@@ -64,7 +64,7 @@
 
 <p align="center"> 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/7n.png" width="20%" /> 
-<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/15n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/15n.png" width="20%" />&nbsp; &nbsp;
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/b8.png" width="20%" /> 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/59be108255a3438a3ebe022599fd39156631a605/docs/assets/b9.png" width="20%" />   
 </p>
@@ -78,7 +78,7 @@
 
 <p align="center"> 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/10n.png" width="20%" /> 
-<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/11n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/11n.png" width="20%" />&nbsp; &nbsp;
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b10b.png" width="20%" /> 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b11b.png" width="20%" />   
 </p>
