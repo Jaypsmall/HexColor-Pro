@@ -76,6 +76,14 @@
 - **Crear Paleta de Favoritos**: Agrupa tus colores favoritos guardados para previsualizarlos juntos como una paleta combinada.
 - **Normalización Hex**: Almacenamiento unificado en formato mayúsculas `#RRGGBB` previniendo duplicados.
 
+<p align="center"> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/10n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/11n.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b10b.png" width="20%" /> 
+<img src="https://github.com/Jaypsmall/HexColor-Pro/blob/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b11b.png" width="20%" />   
+</p>
+
+
 ---
 
 ### 📤 7. Exportación Multiformato
