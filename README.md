@@ -12,6 +12,12 @@
   <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="60" alt="Rust" /></a>
 </p>
 
+<a href="https://github.com/Jaypsmall/HexColor-Pro/releases/download/HexColorPro/HexColor_Pro_v1.0.2.apk">
+ <img src="https://img.shields.io/badge/DOWNLOAD_HEXCOLOR_PRO_v1.0.2_APK-181717?style=flat&logo=android&logoColor=green" alt="Download Release">
+</a>
+
+
+
 ---
 
 ## ✨ Características Principales
@@ -105,79 +111,6 @@ Exporta tus paletas con un toque a los formatos más utilizados en desarrollo e 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/13n.png" width="20%" />&nbsp;&nbsp;&nbsp; 
 <img src="https://github.com/Jaypsmall/HexColor-Pro/blob/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/b12b.png" width="20%" />&nbsp;   
 </p>
-
----
-
-## 🛠️ Estructura del Proyecto
-
-```
-HexColorPro/
-├── android/                   # Configuración y wrappers nativos de Android
-├── assets/                    # Recursos gráficos (moon_light.png, moon_shadow.png)
-├── lib/
-│   ├── main.dart              # Punto de entrada y PageView con deslizamiento
-│   ├── color_manager.dart     # Métodos principales y llamadas al motor
-│   ├── rust_engine.dart       # Integración FFI con la librería Rust
-│   ├── favorites_manager.dart # Gestión reactiva de favoritos
-│   ├── theme/
-│   │   └── gold_theme.dart    # Temas claro y oscuro (Gold Theme)
-│   ├── screens/
-│   │   ├── palette_screen.dart   # Vista de paletas y armonías
-│   │   ├── wheel_screen.dart     # Rueda HSL con luna interactiva
-│   │   ├── picker_screen.dart    # Extractor de colores de imágenes
-│   │   ├── favorites_screen.dart # Favoritos y creador de paletas
-│   │   └── settings_dialog.dart  # Diálogo de ajustes
-│   └── widgets/
-│       ├── color_wheel.dart   # Painter interactivo de la rueda HSL
-│       ├── camera_sniper.dart  # Captura de color por cámara en vivo
-│       ├── info_card.dart      # Tarjeta de datos RGB/HSL/CMYK y WCAG
-│       ├── export_dialog.dart  # Diálogo de exportación CSS/JSON/XML/CSV
-│       └── spectrum_dialog.dart# Convertidor de espectro visible (nm)
-└── native/
-    └── rust_engine/           # Proyecto Rust (Cargo C-ABI)
-        ├── Cargo.toml
-        └── src/
-            └── lib.rs         # Implementación de funciones nativas en Rust
-```
-
----
-
-## 🚀 Compilación e Instalación
-
-### Requisitos
-- [Flutter SDK 3.x](https://flutter.dev)
-- [Rust & Cargo 1.70+](https://www.rust-lang.org/)
-
-### 1. Clonar el repositorio
-```bash
-git clone https://github.com/Jaypsmall/HexColor-Pro.git
-cd HexColor-Pro
-```
-
-### 2. Instalar dependencias de Flutter
-```bash
-flutter pub get
-```
-
-### 3. Compilar el Motor de Rust
-Navega a la carpeta del motor y compila en modo Release:
-```bash
-cd native/rust_engine
-cargo build --release
-cd ../..
-```
-
-*(Opcional para Android: usar `cargo ndk` para generar los `.so` en `android/app/src/main/jniLibs/`)*:
-```bash
-cd native/rust_engine
-cargo ndk -t arm64-v8a -t armeabi-v7a -t x86_64 -o ../../android/app/src/main/jniLibs build --release
-cd ../..
-```
-
-### 4. Ejecutar la aplicación
-```bash
-flutter run
-```
 
 ---
 
