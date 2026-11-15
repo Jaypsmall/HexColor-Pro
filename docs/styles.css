@@ -62,6 +62,51 @@ body {
   overflow-x: hidden;
 }
 
+/* Asegurar que el body y html no permitan desbordes laterales fantasma */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Corregir el contenedor principal para que tenga un margen lateral seguro en móvil */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+
+/* Centrar perfectamente la sección visual del Hero y evitar que se pegue a la derecha */
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: 32px;
+}
+
+.hero-visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 380px;
+  width: 100%;
+  overflow: visible; /* Cambiado para evitar que corte los teléfonos */
+}
+
+/* Ajuste fino para que los teléfonos queden bien centrados en móvil y no se salgan */
+@media (max-width: 960px) {
+  .hero-visual {
+    transform: scale(0.9); /* Los escala ligeramente para que entren holgados en pantallas móviles */
+    margin: 0 auto;
+  }
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
