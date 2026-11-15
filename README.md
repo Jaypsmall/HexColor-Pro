@@ -36,7 +36,8 @@
 
 ---
 
-### 🌙 2. Rueda HSL con Luna Interactiva (Modo Sombra)
+## 🌙 2. Rueda HSL con Luna Interactiva (Modo Sombra)
+
 - **Rueda de Color Interactiva**: Selección precisa mediante gestos en anillos de saturación y matiz.
 - **Centro de Luna Tradicional/Sombra**: Tocar la luna en el centro de la rueda conmuta entre el modo de luz normal (`moon_light.png`) y el **Modo de Sombras** (`moon_shadow.PNG`), generando instantáneamente paletas de sombras y matices.
 - **Modos de Armonía**:
@@ -57,7 +58,8 @@
 
 ---
 
-### 🌓 3. Modo Claro y Modo Oscuro (Gold Theme)
+## 🌓 3. Modo Claro y Modo Oscuro (Gold Theme)
+
 - **Diseño Premium**: Paleta visual dorada adaptativa con sombras elegantes y bordes pulidos.
 - **Tema Adaptativo**: Alterna en tiempo real entre un modo oscuro profesional y un modo claro radiante con fondos `#F4F5F8` y tarjetas blancas contrastadas.
 
@@ -70,13 +72,15 @@
 
 ---
 
-### 👆 4. Navegación por Desplazamiento Táctil (Swipe)
+## 👆 4. Navegación por Desplazamiento Táctil (Swipe)
+
 - **Navegación Táctil**: Pasa entre las pestañas principales (**PALETA**, **RUEDA**, **EXTRACTOR**, **FAVORITOS**) deslizando el dedo horizontalmente.
 - **Sincronización Total**: Animación fluida entre la barra de pestañas superior y el `PageView`.
 
 ---
 
-### 📸 5. Extractor de Imagen y Modo Sniper (Cámara)
+## 📸 5. Extractor de Imagen y Modo Sniper (Cámara)
+
 - **Camara Sniper en Vivo**: Retícula móvil en tiempo real para capturar cualquier color del mundo real directamente desde la cámara trasera.
 - **Extractor de Paletas**: Carga imágenes desde la galería y extrae automáticamente los colores dominantes utilizando cuantización de imágenes.
 
@@ -89,7 +93,8 @@
 
 ---
 
-### ⭐ 6. Gestión de Favoritos y Creador de Paletas
+## ⭐ 6. Gestión de Favoritos y Creador de Paletas
+
 - **Sincronización en Tiempo Real**: `FavoritesManager` unificado para guardar y eliminar colores con 1 solo toque (botón de estrella).
 - **Crear Paleta de Favoritos**: Agrupa tus colores favoritos guardados para previsualizarlos juntos como una paleta combinada.
 - **Normalización Hex**: Almacenamiento unificado en formato mayúsculas `#RRGGBB` previniendo duplicados.
@@ -103,8 +108,9 @@
 
 ---
 
-### 📤 7. Exportación Multiformato
+## 📤 7. Exportación Multiformato
 Exporta tus paletas con un toque a los formatos más utilizados en desarrollo e ilustración:
+
 - **Variables CSS** (`--color-1: #FF5733;`)
 - **Arreglo JSON** (`["#FF5733", "#33FF57"]`)
 - **Android XML** (`<color name="palette_1">#FF5733</color>`)
