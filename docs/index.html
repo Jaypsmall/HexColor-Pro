@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HexColor Pro v1.0.2 | Motor de Espacios de Color</title>
+  <meta name="description" content="Motor de Espacios de Color de Alto Rendimiento desarrollado con Flutter, Rust y Kotlin por JAYLIZ.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Barra de Navegación -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <a href="#" class="brand">
+        <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/d6ecdab0b3db838bdd722d4eba6e95df31234c6c/docs/assets/icono_hex.png" alt="HexColor Pro Logo" class="brand-logo">
+        <span class="brand-text">HEXCOLOR <span class="gold-accent">PRO</span></span>
+        <span class="version-badge">v1.0.2</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#motor-rust">Motor Rust</a>
+        <a href="#caracteristicas">Características</a>
+        <a href="#galeria">Interfaz</a>
+        <a href="#exportacion">Exportación</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-btn" aria-label="Cambiar tema claro/oscuro" title="Alternar Gold Dark / Gold Light">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-label">Modo Claro</span>
+        </button>
+        <a href="https://github.com/Jaypsmall/HexColor-Pro/releases/download/HexColorPro/HexColor_Pro_v1.0.2.apk" class="btn-download-sm">
+          Descargar APK
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <div class="platform-pill">
+          <span class="dot"></span> Android • iOS • Windows • Linux
+        </div>
+        <h1>Motor de Espacios de Color de <span class="gold-gradient">Alto Rendimiento</span></h1>
+        <p class="hero-subtitle">
+          Precisión matemática impulsada por <strong>Rust (C-ABI FFI)</strong>, arquitectura nativa en <strong>Kotlin</strong> e interfaz fluida en <strong>Flutter</strong>. Diseñado para desarrolladores, diseñadores UI/UX e ilustradores exigentes.
+        </p>
+
+        <div class="cta-group">
+          <a href="https://github.com/Jaypsmall/HexColor-Pro/releases/download/HexColorPro/HexColor_Pro_v1.0.2.apk" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Descargar APK v1.0.2
+          </a>
+          <a href="https://github.com/Jaypsmall/HexColor-Pro" target="_blank" rel="noopener" class="btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            Ver en GitHub
+          </a>
+        </div>
+
+        <!-- Stack Tecnológico -->
+        <div class="tech-stack">
+          <div class="tech-item">
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/rust/rust-original.svg" alt="Rust" class="rust-logo">
+            <span>Rust Engine</span>
+          </div>
+          <div class="tech-item">
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" alt="Flutter">
+            <span>Flutter UI</span>
+          </div>
+          <div class="tech-item">
+            <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" alt="Kotlin">
+            <span>Kotlin Native</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Showcase Teléfonos Hero -->
+      <div class="hero-visual">
+        <div class="phone-mockup main-phone">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/1n.png" alt="HexColor Pro Dark Mode">
+        </div>
+        <div class="phone-mockup secondary-phone">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/1db2cf75a08088d1d9cbd070cbb85d0afff6f4e1/docs/assets/3n.png" alt="Rueda HSL Interactiva">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Motor Rust -->
+  <section id="motor-rust" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">ARQUITECTURA FFI</span>
+        <h2>Motor Nativo en Rust (<code class="inline-code">rust_engine</code>)</h2>
+        <p>Cálculos colorimétricos de latencia cero compilados directamente a código máquina mediante C-ABI.</p>
+      </div>
+
+      <div class="rust-grid">
+        <div class="card feature-card">
+          <div class="card-icon">⚡</div>
+          <h3>Aceleración C-ABI (FFI)</h3>
+          <p>Algoritmos de conversión matemática escritos en Rust para rendimiento nativo sin sobrecarga del recolector de basura.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="card-icon">🔄</div>
+          <h3>Espacios de Color</h3>
+          <p>Transformación instantánea y bidireccional entre <strong>HEX (#RRGGBB)</strong>, <strong>RGB</strong>, <strong>HSL</strong>, <strong>HSV</strong> y <strong>CMYK</strong>.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="card-icon">👁️</div>
+          <h3>Simulación de Daltonismo</h3>
+          <p>Matrices de transformación espectral en tiempo real para <strong>Protanopia</strong>, <strong>Deuteranopia</strong> y <strong>Tritanopia</strong>.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="card-icon">♿</div>
+          <h3>Accesibilidad WCAG 2.1</h3>
+          <p>Cálculo exacto del ratio de contraste luminoso con indicador automático <strong>PASS / FAIL</strong> para estándares AA y AAA.</p>
+        </div>
+        <div class="card feature-card highlight-border">
+          <div class="card-icon">🛡️</div>
+          <h3>Fallback Automático</h3>
+          <p>Resiliencia garantizada: conmutación transparente a motor Dart puro si la librería nativa (<code>.so</code> / <code>.dll</code> / <code>.dylib</code>) no está disponible.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Características Principales + Capturas -->
+  <section id="caracteristicas" class="section alt-bg">
+    <div class="container">
+
+      <!-- Bloque 1: Rueda HSL & Modo Sombra -->
+      <div class="showcase-row">
+        <div class="showcase-info">
+          <span class="section-tag">TEORÍA DEL COLOR</span>
+          <h3>🌙 Rueda HSL con Luna Interactiva</h3>
+          <p>Selección táctil de alta precisión sobre anillos de matiz y saturación. Toca la luna central para alternar instantáneamente entre luz estándar y el <strong>Modo de Sombras</strong>.</p>
+          
+          <div class="harmonies-tags">
+            <span>Complementario</span>
+            <span>Triádico</span>
+            <span>Análogo</span>
+            <span>Tetrádico</span>
+            <span>Complementario Dividido</span>
+            <span>Monocromático</span>
+            <span>Shades & Tints</span>
+          </div>
+        </div>
+        <div class="showcase-screens">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/1db2cf75a08088d1d9cbd070cbb85d0afff6f4e1/docs/assets/3n.png" alt="Rueda HSL 1" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/1db2cf75a08088d1d9cbd070cbb85d0afff6f4e1/docs/assets/4n.png" alt="Rueda HSL 2" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/1db2cf75a08088d1d9cbd070cbb85d0afff6f4e1/docs/assets/5n.png" alt="Modo Sombra 1" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/1db2cf75a08088d1d9cbd070cbb85d0afff6f4e1/docs/assets/6n.png" alt="Modo Sombra 2" class="screen-shot">
+        </div>
+      </div>
+
+      <!-- Bloque 2: Extractor & Modo Sniper -->
+      <div class="showcase-row reverse">
+        <div class="showcase-info">
+          <span class="section-tag">VISIÓN ARTIFICIAL</span>
+          <h3>📸 Extractor de Imagen y Modo Sniper</h3>
+          <p>Captura colores del mundo real o extrae la esencia cromática de cualquier fotografía en segundos.</p>
+          <ul class="check-list">
+            <li><strong>Cámara Sniper en Vivo:</strong> Retícula móvil de precisión píxel a píxel sobre la cámara trasera en tiempo real.</li>
+            <li><strong>Cuantización de Imágenes:</strong> Importa imágenes de tu galería y obtén automáticamente su paleta dominante.</li>
+            <li><strong>Navegación Swipe:</strong> Desliza fluidamente entre <em>PALETA, RUEDA, EXTRACTOR y FAVORITOS</em>.</li>
+          </ul>
+        </div>
+        <div class="showcase-screens">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/7n.png" alt="Extractor de Color" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/59be108255a3438a3ebe022599fd39156631a605/docs/assets/15n.png" alt="Modo Sniper" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/59be108255a3438a3ebe022599fd39156631a605/docs/assets/b8.png" alt="Sniper Light" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/59be108255a3438a3ebe022599fd39156631a605/docs/assets/b9.png" alt="Extractor Light" class="screen-shot">
+        </div>
+      </div>
+
+      <!-- Bloque 3: Favoritos y Creador de Paletas -->
+      <div class="showcase-row">
+        <div class="showcase-info">
+          <span class="section-tag">FLUJO DE TRABAJO</span>
+          <h3>⭐ Gestión de Favoritos y Creador de Paletas</h3>
+          <p>Organiza tus hallazgos cromáticos sin fricción con el motor <code>FavoritesManager</code> unificado.</p>
+          <ul class="check-list">
+            <li><strong>Guardado en 1 Toque:</strong> Sincronización instantánea en toda la aplicación.</li>
+            <li><strong>Constructor de Paletas:</strong> Combina tus colores guardados en paletas personalizadas listas para producción.</li>
+            <li><strong>Normalización HEX:</strong> Estandarización automática en mayúsculas <code>#RRGGBB</code> evitando entradas duplicadas.</li>
+          </ul>
+        </div>
+        <div class="showcase-screens">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/10n.png" alt="Favoritos Dark" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/ed1b4af3d14ccff04d277cd16e5fff4f82e3995b/docs/assets/11n.png" alt="Creador Paletas" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b10b.png" alt="Favoritos Light" class="screen-shot">
+          <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/49426d6eea4f404de1de596704265d2168b3bfe0/docs/assets/b11b.png" alt="Paletas Light" class="screen-shot">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Galería Gold Theme (Dark & Light) -->
+  <section id="galeria" class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">DISEÑO ADAPTATIVO</span>
+        <h2>🌓 Gold Theme: Modo Oscuro & Modo Claro</h2>
+        <p>Estética dorada con contrastes calibrados. Prueba el botón superior derecho de esta web para ver la transición en vivo.</p>
+      </div>
+
+      <div class="dual-theme-grid">
+        <div class="theme-showcase-box">
+          <h4>🌑 Gold Dark Mode</h4>
+          <div class="screens-pair">
+            <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/1n.png" alt="Dark 1" class="screen-shot">
+            <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/2n.png" alt="Dark 2" class="screen-shot">
+          </div>
+        </div>
+        <div class="theme-showcase-box">
+          <h4>☀️ Gold Light Mode (#F4F5F8)</h4>
+          <div class="screens-pair">
+            <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/b1.png" alt="Light 1" class="screen-shot">
+            <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/9011ca547e8e125ec5a0a6dfe3257c8ed093670b/docs/assets/b02.png" alt="Light 2" class="screen-shot">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Exportación Multiformato -->
+  <section id="exportacion" class="section alt-bg">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">INTEGRACIÓN DIRECTA</span>
+        <h2>📤 Exportación Multiformato en 1 Toque</h2>
+        <p>Lleva tus paletas directamente a tu IDE, hoja de estilos o herramienta de diseño.</p>
+      </div>
+
+      <div class="export-grid">
+        <div class="code-card">
+          <div class="code-header">
+            <span class="lang-badge css">CSS Variables</span>
+            <span class="file-ext">palette.css</span>
+          </div>
+          <pre><code>:root {
+  --color-1: #D4AF37;
+  --color-2: #181717;
+  --color-3: #00FF66;
+}</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-header">
+            <span class="lang-badge json">JSON Array</span>
+            <span class="file-ext">colors.json</span>
+          </div>
+          <pre><code>[
+  "#D4AF37",
+  "#181717",
+  "#00FF66"
+]</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-header">
+            <span class="lang-badge xml">Android XML</span>
+            <span class="file-ext">colors.xml</span>
+          </div>
+          <pre><code>&lt;resources&gt;
+  &lt;color name="palette_1"&gt;#D4AF37&lt;/color&gt;
+  &lt;color name="palette_2"&gt;#181717&lt;/color&gt;
+&lt;/resources&gt;</code></pre>
+        </div>
+
+        <div class="code-card">
+          <div class="code-header">
+            <span class="lang-badge csv">Tabla CSV</span>
+            <span class="file-ext">export.csv</span>
+          </div>
+          <pre><code>Name,Hex,RGB,HSL
+Color 1,#D4AF37,"212,175,55","46,65%,52%"
+Color 2,#181717,"24,23,23","0,2%,9%"</code></pre>
+        </div>
+      </div>
+
+      <div class="export-screens-row">
+        <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/16n.png" alt="Exportación 1" class="screen-shot">
+        <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/14n.png" alt="Exportación 2" class="screen-shot">
+        <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/13n.png" alt="Exportación 3" class="screen-shot">
+        <img src="https://raw.githubusercontent.com/Jaypsmall/HexColor-Pro/45bfdebe2095afb04a97ba865e2fced11f4ea562/docs/assets/b12b.png" alt="Exportación 4" class="screen-shot">
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Final -->
+  <section class="cta-banner">
+    <div class="container cta-box">
+      <h2>¿Listo para dominar el color a velocidad nativa?</h2>
+      <p>Descarga la última compilación oficial para Android o explora el repositorio del proyecto.</p>
+      <a href="https://github.com/Jaypsmall/HexColor-Pro/releases/download/HexColorPro/HexColor_Pro_v1.0.2.apk" class="btn-primary">
+        📥 Descargar HexColor Pro v1.0.2 (.APK)
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>
+        <span class="brand-text">HEXCOLOR <span class="gold-accent">PRO</span></span>
+        <p class="copyright">Desarrollado con ❤️ por <strong>JAYLIZ</strong>. Licencia PRO — Todos los derechos reservados.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/Jaypsmall/HexColor-Pro" target="_blank" rel="noopener">GitHub Repo</a>
+        <a href="https://github.com/Jaypsmall/HexColor-Pro/releases" target="_blank" rel="noopener">Releases</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal para ampliar capturas -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="Vista ampliada">
+  </div>
+
+  <script>
+    // Alternar Gold Dark / Gold Light Theme
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlEl = document.documentElement;
+    const themeIcon = themeToggle.querySelector('.theme-icon');
+    const themeLabel = themeToggle.querySelector('.theme-label');
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', nextTheme);
+      
+      if (nextTheme === 'light') {
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'Modo Oscuro';
+      } else {
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Modo Claro';
+      }
+    });
+
+    // Lightbox para ver capturas en grande al hacer clic
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const closeBtn = document.querySelector('.lightbox-close');
+
+    document.querySelectorAll('.screen-shot, .phone-mockup img').forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target !== lightboxImg) {
+        lightbox.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
