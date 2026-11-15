@@ -25,20 +25,26 @@
 
 ---
 
-## ✨ Características Principales
+# ✨ Características Principales
 
-###  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a> 1. Motor Nativo en Rust (`rust_engine`)  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a>
+##  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a> 1. Motor Nativo en Rust (`rust_engine`)  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="30" alt="Rust" /></a>
+
 - **Aceleración C-ABI (FFI)**: Algoritmos de conversión matemática de color escritos en Rust para máximo rendimiento.
+
 - **Espacios de Color**: Conversiones entre Hexadecimal (`#RRGGBB`), RGB, HSL, HSV y CMYK.
+
 - **Simulación de Daltonismo**: Algoritmos de transformación espectral para Protanopia, Deuteranopia y Tritanopia.
+
 - **Accesibilidad WCAG 2.1**: Cálculo del ratio de contraste en tiempo real con indicador PASS/FAIL para cumplimiento de estándares web y móviles.
+
 - **Fallback Automático**: Fallback transparente en Dart si la librería nativa (`.dll` / `.so` / `.dylib`) no está presente.
 
 ---
 
-## 🌙 2. Rueda HSL con Luna Interactiva (Modo Sombra)
+# 🌙 2. Rueda HSL con Luna Interactiva (Modo Sombra)
 
 - **Rueda de Color Interactiva**: Selección precisa mediante gestos en anillos de saturación y matiz.
+
 - **Centro de Luna Tradicional/Sombra**: Tocar la luna en el centro de la rueda conmuta entre el modo de luz normal (`moon_light.png`) y el **Modo de Sombras** (`moon_shadow.PNG`), generando instantáneamente paletas de sombras y matices.
 - **Modos de Armonía**:
   - Complementario
@@ -58,9 +64,10 @@
 
 ---
 
-## 🌓 3. Modo Claro y Modo Oscuro (Gold Theme)
+# 🌓 3. Modo Claro y Modo Oscuro (Gold Theme)
 
 - **Diseño Premium**: Paleta visual dorada adaptativa con sombras elegantes y bordes pulidos.
+
 - **Tema Adaptativo**: Alterna en tiempo real entre un modo oscuro profesional y un modo claro radiante con fondos `#F4F5F8` y tarjetas blancas contrastadas.
 
 <p align="center"> 
@@ -72,16 +79,18 @@
 
 ---
 
-## 👆 4. Navegación por Desplazamiento Táctil (Swipe)
+# 👆 4. Navegación por Desplazamiento Táctil (Swipe)
 
 - **Navegación Táctil**: Pasa entre las pestañas principales (**PALETA**, **RUEDA**, **EXTRACTOR**, **FAVORITOS**) deslizando el dedo horizontalmente.
+
 - **Sincronización Total**: Animación fluida entre la barra de pestañas superior y el `PageView`.
 
 ---
 
-## 📸 5. Extractor de Imagen y Modo Sniper (Cámara)
+# 📸 5. Extractor de Imagen y Modo Sniper (Cámara)
 
 - **Camara Sniper en Vivo**: Retícula móvil en tiempo real para capturar cualquier color del mundo real directamente desde la cámara trasera.
+
 - **Extractor de Paletas**: Carga imágenes desde la galería y extrae automáticamente los colores dominantes utilizando cuantización de imágenes.
 
 <p align="center"> 
@@ -93,10 +102,12 @@
 
 ---
 
-## ⭐ 6. Gestión de Favoritos y Creador de Paletas
+# ⭐ 6. Gestión de Favoritos y Creador de Paletas
 
 - **Sincronización en Tiempo Real**: `FavoritesManager` unificado para guardar y eliminar colores con 1 solo toque (botón de estrella).
+
 - **Crear Paleta de Favoritos**: Agrupa tus colores favoritos guardados para previsualizarlos juntos como una paleta combinada.
+
 - **Normalización Hex**: Almacenamiento unificado en formato mayúsculas `#RRGGBB` previniendo duplicados.
 
 <p align="center"> 
@@ -108,12 +119,15 @@
 
 ---
 
-## 📤 7. Exportación Multiformato
+# 📤 7. Exportación Multiformato
 Exporta tus paletas con un toque a los formatos más utilizados en desarrollo e ilustración:
 
 - **Variables CSS** (`--color-1: #FF5733;`)
+
 - **Arreglo JSON** (`["#FF5733", "#33FF57"]`)
+
 - **Android XML** (`<color name="palette_1">#FF5733</color>`)
+
 - **Tabla CSV** (Para Excel, Figma y hojas de cálculo)
 
 <p align="center"> 
@@ -125,8 +139,8 @@ Exporta tus paletas con un toque a los formatos más utilizados en desarrollo e 
 
 ---
 
-## 👨‍💻 Autor y Licencia
+# 👨‍💻 Autor y Licencia
 
-Desarrollado con ❤️ por **JAYLIZ**.
+Desarrollado con ❤️ por **Jaypsmall**.
 
 Licencia PRO - Todos los derechos reservados.
