@@ -1,22 +1,27 @@
-# 🎨 HexColor PRO v1.0.1  ![Kotlin](https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE) ![Flutter](https://img.shields.io/badge/Flutter-181717?style=flat&logo=flutter&logoColor=70B9EC) ![Rust](https://img.shields.io/badge/Rust-181717?style=flat&logo=rust&logoColor=FF6000)
+<div align="center">
+ 
+  <h1>🎨 HEXCOLOR PRO v1.0.2</h1>
+  <p><b>Motor de Espacios de Color de Alto Rendimiento | Flutter + Óxido + Kotlin</b></p>
+  
+  <p>
+    <img src="https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE" alt="Kotlin">
+    <img src="https://img.shields.io/badge/Flutter-181717?style=flat&logo=flutter&logoColor=70B9EC" alt="Flutter">
+    <img src="https://img.shields.io/badge/Rust-181717?style=flat&logo=rust&logoColor=FF6000" alt="Rust">
+    <img src="https://img.shields.io/badge/License-PRO-gold" alt="Licencia">
+    <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20Linux-brightgreen" alt="Platform">
+  </p>
+  
+  <br>
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="50" alt="Kotlin" /> &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" height="50" alt="Flutter" /> &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="50" alt="Rust" />
+  <br><br>
+  
+  <a href="https://github.com/Jaypsmall/HexColor-Pro/releases/download/HexColorPro/HexColor_Pro_v1.0.2.apk">
+    <img src="https://img.shields.io/badge/📥_DESCARGAR_APK_v1.0.2-181717?style=for-the-badge&logo=android&logoColor=00FF66" alt="Descargar APK">
+  </a>
 
-![Kotlin](https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE) ![Flutter](https://img.shields.io/badge/Flutter-181717?style=flat&logo=flutter&logoColor=70B9EC) ![Rust](https://img.shields.io/badge/Rust-181717?style=flat&logo=rust&logoColor=FF6000)
-![License](https://img.shields.io/badge/License-PRO-gold)
-![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20Linux-brightgreen)
-
-**HexColor PRO** es una aplicación avanzada e interactiva de diseño y cálculo de espacios de color impulsada por un motor de alto rendimiento escrito en **Rust** e integrada en **Flutter**. Diseñada para desarrolladores, diseñadores gráficos y profesionales del color.
-
-<p align="center">
-  <a href="https://kotlinlang.org" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kotlin/kotlin-original.svg" height="60" alt="Kotlin" /></a> &nbsp;&nbsp;
-  <a href="https://flutter.dev" target="_blank"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flutter/flutter-original.svg" height="60" alt="Flutter" /></a> &nbsp;&nbsp;
-  <a href="https://www.rust-lang.org" target="_blank"><img src="https://rustacean.net/assets/rustacean-flat-happy.svg" height="60" alt="Rust" /></a>
-</p>
-
-<a href="https://github.com/Jaypsmall/HexColor-Pro/releases/download/HexColorPro/HexColor_Pro_v1.0.2.apk">
- <img src="https://img.shields.io/badge/DOWNLOAD_HEXCOLOR_PRO_v1.0.2_APK-181717?style=flat&logo=android&logoColor=green" alt="Download Release">
-</a>
-
-
+</div>
 
 ---
 
