@@ -1,7 +1,7 @@
 <div align="center">
  
   <h1>🎨 HEXCOLOR PRO v1.0.2</h1>
-  <p><b>Motor de Espacios de Color de Alto Rendimiento | Flutter + Óxido + Kotlin</b></p>
+  <p><b>Motor de Espacios de Color de Alto Rendimiento | Flutter + Rust + Kotlin</b></p>
   
   <p>
     <img src="https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE" alt="Kotlin">
