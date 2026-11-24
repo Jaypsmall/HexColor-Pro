@@ -4,7 +4,7 @@
   <p><b>Motor de Espacios de Color de Alto Rendimiento | Flutter + Rust + Kotlin</b></p>
   
   <p>
-    <img src="https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE" alt="Kotlin">
+   <img src="https://img.shields.io/badge/Kotlin-181717?style=flat&logo=kotlin&logoColor=C81AEE" alt="Kotlin">
     <img src="https://img.shields.io/badge/Flutter-181717?style=flat&logo=flutter&logoColor=70B9EC" alt="Flutter">
     <img src="https://img.shields.io/badge/Rust-181717?style=flat&logo=rust&logoColor=FF6000" alt="Rust">
     <img src="https://img.shields.io/badge/License-PRO-gold" alt="Licencia">
