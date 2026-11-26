@@ -158,7 +158,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Widget build(BuildContext context) {
     final favList = _filteredFavorites;
     final txtColor = GoldTheme.textColor(widget.isDarkMode);
-    final cardBg = GoldTheme.cardColor(widget.isDarkMode);
     final inputBg = GoldTheme.cardInputColor(widget.isDarkMode);
 
     if (_favManager.favorites.isEmpty) {
@@ -181,6 +180,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         .map((h) => ColorManager.hexToColor(h))
         .whereType<Color>()
         .toList();
+
+    // Group into palettes of 5 colors max for horizontal palette cards
+    List<List<Color>> paletteGroups = [];
+    for (int i = 0; i < allFavColors.length; i += 5) {
+      paletteGroups.add(allFavColors.sublist(i, i + 5 > allFavColors.length ? allFavColors.length : i + 5));
+    }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -271,17 +276,104 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ],
           ),
 
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
 
-          // Grid View of Favorites
+          // Section 1: Saved Palettes (Horizontal strips)
+          if (paletteGroups.isNotEmpty && _searchQuery.isEmpty) ...[
+            Text(
+              "🎨 PALETAS AGRUPADAS",
+              style: TextStyle(
+                color: GoldTheme.subtextColor(widget.isDarkMode),
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            ...paletteGroups.asMap().entries.map((entry) {
+              final groupIndex = entry.key;
+              final palette = entry.value;
+              return Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: GoldTheme.cardColor(widget.isDarkMode),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: GoldTheme.goldMid.withOpacity(0.6), width: 1),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Paleta #${groupIndex + 1} (${palette.length} colores)",
+                          style: TextStyle(color: txtColor, fontSize: 11, fontWeight: FontWeight.bold),
+                        ),
+                        GestureDetector(
+                          onTap: () => _showFavoritePaletteDialog(palette),
+                          child: const Text(
+                            "Ver / Exportar",
+                            style: TextStyle(color: GoldTheme.goldMid, fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      height: 40,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Row(
+                          children: palette.map((color) {
+                            final hex = ColorManager.colorToHex(color);
+                            return Expanded(
+                              child: GestureDetector(
+                                onTap: () => widget.onSelectColor(color),
+                                child: Container(
+                                  color: color,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    hex.replaceAll('#', ''),
+                                    style: TextStyle(
+                                      color: ColorManager.isDark(color) ? Colors.white : Colors.black,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+            const SizedBox(height: 12),
+          ],
+
+          // Section 2: Individual Favorite Colors (Smaller cards grid)
+          Text(
+            "⭐ COLORES FAVORITOS INDIVIDUALES",
+            style: TextStyle(
+              color: GoldTheme.subtextColor(widget.isDarkMode),
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              childAspectRatio: 1.2,
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1.5,
             ),
             itemCount: favList.length,
             itemBuilder: (context, index) {
@@ -297,18 +389,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               return GestureDetector(
                 onTap: () => widget.onSelectColor(color),
                 child: Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: displayColor,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: GoldTheme.goldMid, width: 1.2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: widget.isDarkMode ? Colors.black38 : Colors.black12,
-                        blurRadius: 6,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: GoldTheme.goldMid, width: 1),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,34 +402,20 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Icon(Icons.star, color: GoldTheme.goldLight, size: 20),
-                          IconButton(
-                            icon: Icon(Icons.delete_outline, color: textColor, size: 18),
-                            onPressed: () => _favManager.removeFavorite(hex),
-                            constraints: const BoxConstraints(),
-                            padding: EdgeInsets.zero,
+                          const Icon(Icons.star, color: GoldTheme.goldLight, size: 14),
+                          GestureDetector(
+                            onTap: () => _favManager.removeFavorite(hex),
+                            child: Icon(Icons.delete_outline, color: textColor, size: 14),
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            hex,
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w900,
-                            ),
-                          ),
-                          Text(
-                            ColorManager.colorToRgbString(color),
-                            style: TextStyle(
-                              color: textColor.withOpacity(0.8),
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        hex,
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ],
                   ),

@@ -45,14 +45,12 @@ class _MainScreenState extends State<MainScreen> {
   bool _isDarkMode = true;
   bool _isGoldMode = true;
   String _colorBlindnessMode = 'None';
-  bool _isPageScrollable = true;
   int _analogousCount = 7;
 
   Color _currentColor = const Color(0xFF21DD10);
   late HSVColor _hsv;
 
   int _selectedTabIndex = 1; // Default to Wheel tab (Rueda)
-  late PageController _pageController;
 
   bool _isSniperActive = false;
   bool _isSniperFullscreen = false;
@@ -64,13 +62,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _hsv = HSVColor.fromColor(_currentColor);
-    _pageController = PageController(initialPage: _selectedTabIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   void _updateColor(Color newColor) {
@@ -110,11 +101,6 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _selectedTabIndex = index;
     });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
   }
 
   void _showSettingsDialog() {
@@ -215,6 +201,7 @@ class _MainScreenState extends State<MainScreen> {
         appBar: AppBar(
           backgroundColor: bg,
           elevation: 0,
+          scrolledUnderElevation: 0,
           leading: IconButton(
             icon: Icon(Icons.menu, color: titleColor, size: 28),
             onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -233,13 +220,19 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                "HEXCOLOR PRO",
-                style: TextStyle(
-                  color: titleColor,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18,
-                  letterSpacing: 1.5,
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "HEXCOLOR PRO",
+                    style: TextStyle(
+                      color: titleColor,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 18,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -301,17 +294,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
 
-        // Body Content with PageView for Swipe Gesture Navigation
+        // Body Content with IndexedStack (No lateral swiping)
         body: Stack(
           children: [
-            PageView(
-              controller: _pageController,
-              physics: _isPageScrollable ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
-              onPageChanged: (index) {
-                setState(() {
-                  _selectedTabIndex = index;
-                });
-              },
+            IndexedStack(
+              index: _selectedTabIndex,
               children: [
                 PaletteScreen(
                   currentColor: _currentColor,
@@ -335,9 +322,6 @@ class _MainScreenState extends State<MainScreen> {
                   colorBlindnessMode: _colorBlindnessMode,
                   onColorBlindnessChanged: (val) => setState(() => _colorBlindnessMode = val),
                   analogousCount: _analogousCount,
-                  onWheelInteracting: (isInteracting) {
-                    setState(() => _isPageScrollable = !isInteracting);
-                  },
                 ),
                 PickerScreen(
                   onColorSelected: (c) {
@@ -430,7 +414,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Modo Sniper (Cámara)",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       setState(() => _isSniperActive = true);
                     },
                   ),
@@ -439,7 +423,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Paleta de Colores",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       _navigateToTab(0);
                     },
                   ),
@@ -448,7 +432,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Rueda HSL (Moon)",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       _navigateToTab(1);
                     },
                   ),
@@ -457,7 +441,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Extractor de Imagen",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       _navigateToTab(2);
                     },
                   ),
@@ -466,7 +450,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Mis Favoritos",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       _navigateToTab(3);
                     },
                   ),
@@ -475,7 +459,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Importar Archivo / Paleta",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       _importPaletteFromFile();
                     },
                   ),
@@ -484,7 +468,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Convertidor de Espectro",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       showDialog(
                         context: context,
                         builder: (ctx) => SpectrumDialogWidget(
@@ -498,7 +482,7 @@ class _MainScreenState extends State<MainScreen> {
                     title: "Ajustes",
                     textColor: txtColor,
                     onTap: () {
-                      Navigator.of(context).pop();
+                      _scaffoldKey.currentState?.closeDrawer();
                       _showSettingsDialog();
                     },
                   ),
